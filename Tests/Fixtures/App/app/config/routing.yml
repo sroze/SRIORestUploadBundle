@@ -1,0 +1,4 @@
+srio_rest_upload_test_bundle:
+    resource: "@SRIORestUploadBundle/Tests/Fixtures/Controller/"
+    type:     annotation
+    prefix:   /

@@ -1,0 +1,15 @@
+framework:
+    secret:          MySecret
+    templating:      { engines: ['twig'] }
+    router:          { resource: "%kernel.root_dir%/config/routing.yml" }
+    form:            true
+    csrf_protection: true
+    session:         ~
+    default_locale:  en
+    translator:      { fallback: en }
+    profiler:        { only_exceptions: false }
+
+# enable the web profiler
+web_profiler:
+    toolbar: false
+    intercept_redirects: false
