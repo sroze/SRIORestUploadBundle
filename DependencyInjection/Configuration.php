@@ -20,9 +20,29 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('srio_rest_upload');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->scalarNode('upload_dir')->isRequired()->cannotBeEmpty()->end()
+                ->arrayNode('parameters')
+                    ->addDefaultsIfNotSet()
+                    ->canBeUnset()
+                    ->children()
+                        ->scalarNode('uploadType')
+                            ->defaultValue('uploadType')
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('processors')
+                    ->useAttributeAsKey('name')
+                    ->defaultValue(array(
+                        'simple' => 'SRIO\RestUploadBundle\Upload\Processor\SimpleUploadProcessor',
+                        'multipart' => 'SRIO\RestUploadBundle\Upload\Processor\MultipartUploadProcessor',
+                        'resumable' => 'SRIO\RestUploadBundle\Upload\Processor\ResumableUploadProcessor'
+                    ))
+                    ->prototype('scalar')->end()
+                ->end()
+            ->end();
+
 
         return $treeBuilder;
     }

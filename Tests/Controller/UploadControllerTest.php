@@ -5,13 +5,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UploadControllerTest extends WebTestCase
 {
-    public function testUpload()
+    public function testSimpleUpload()
     {
         $client = static::createClient();
-        $client->request('POST', '/upload');
+        $client->request('POST', '/upload', array(
+            'uploadType' => 'simple'
+        ));
+
         $response = $client->getResponse();
 
-        var_dump($response->getStatusCode(), $response->getContent());
-        $this->assertEquals(200, $response->getStatusCode());
     }
 }

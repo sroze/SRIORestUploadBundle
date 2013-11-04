@@ -13,3 +13,7 @@ framework:
 web_profiler:
     toolbar: false
     intercept_redirects: false
+
+# RestUploadBundle configuration
+srio_rest_upload:
+    upload_dir: %kernel.root_dir%/../web/uploads
