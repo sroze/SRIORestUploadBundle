@@ -22,12 +22,11 @@ class UploadController extends Controller
     {
         $form = $this->createForm(new MediaFormType());
         $uploadManager = $this->get('srio_rest_upload.upload_manager');
-
         $response = $uploadManager->handleRequest($form, $request);
+
         if ($form->isValid()) {
             $media = $form->getData();
-            var_dump($media);
-            exit;
+            return new JsonResponse($media);
         }
 
         return $response;

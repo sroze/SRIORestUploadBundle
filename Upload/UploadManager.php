@@ -1,10 +1,13 @@
 <?php
 namespace SRIO\RestUploadBundle\Upload;
 
+use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Upload\Processor\AbstractUploadProcessor;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,9 +36,69 @@ class UploadManager
      */
     public function handleRequest (FormInterface $form, Request $request, array $extraConfig = array())
     {
-        $processor = $this->createProcessor($form, $request, $extraConfig);
+        try {
+            $processor = $this->createProcessor($form, $request, $extraConfig);
+            if ($processor->handleRequest($request)) {
+                return $this->returnSuccessResponse($form);
+            } else {
+                return $this->returnFormErrors($form);
+            }
+        } catch (UploadException $e) {
+            $form->addError(new FormError($e->getMessage()));
 
-        return $processor->handleRequest($request);
+            return $this->returnFormErrors($form);
+        }
+    }
+
+    /**
+     * Return a 200 successful JSON response.
+     *
+     * @return JsonResponse
+     */
+    protected function returnSuccessResponse (FormInterface $form)
+    {
+        return new JsonResponse($form->getData());
+    }
+
+    /**
+     * If form isn't valid, call this method to return a response
+     * with 400 bad request status code and form errors.
+     *
+     * @return Response
+     */
+    protected function returnFormErrors (FormInterface $form)
+    {
+        return new JsonResponse($this->computeFormErrors($form), 400);
+    }
+
+    /**
+     * Compute the form errors as an array.
+     *
+     * @param FormInterface $form
+     * @return array
+     */
+    protected function computeFormErrors (FormInterface $form)
+    {
+        $list = array();
+        $errors = $form->getErrors();
+
+        if (count($errors) > 0) {
+            $list['errors'] = array();
+            foreach ($errors as $error) {
+                /** @var $error FormError */
+                $list['errors'][] = $error->getMessage();
+            }
+        }
+
+        $children = $form->all();
+        if (count($children) > 0) {
+            $list['children'] = array();
+
+            foreach ($children as $child) {
+                $list['children'][$child->getName()] = $this->computeFormErrors($child);
+            }
+        }
+        return $list;
     }
 
     /**
