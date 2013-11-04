@@ -26,9 +26,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        $dir = sys_get_temp_dir().'/SRIORestUploadBundle/cache';
-        var_dump($dir);
-        return $dir;
+        return sys_get_temp_dir().'/SRIORestUploadBundle/cache';
     }
 
     /**
