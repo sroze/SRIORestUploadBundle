@@ -33,6 +33,21 @@ class SimpleUploadTest extends AbstractUploadTestCase
         $this->assertTrue(array_key_exists('errors', $jsonContent));
     }
 
+    public function testWithoutHeadersSimpleUpload()
+    {
+        $client = static::createClient();
+        $queryParameters = array('uploadType' => 'simple', 'name' => 'test');
+
+        $content = $this->getResource($client, 'apple.gif');
+        $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array(), $content);
+
+        $response = $client->getResponse();
+        $this->assertEquals(400, $response->getStatusCode());
+        $jsonContent = json_decode($response->getContent(), true);
+        $this->assertNotEmpty($jsonContent);
+        $this->assertTrue(array_key_exists('errors', $jsonContent));
+    }
+
     public function testSimpleUpload()
     {
         $client = static::createClient();
