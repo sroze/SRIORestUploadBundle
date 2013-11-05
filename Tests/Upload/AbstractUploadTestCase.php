@@ -4,7 +4,7 @@ namespace SRIO\RestUploadBundle\Tests\Upload;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AbstractUploadTestCase extends WebTestCase
+abstract class AbstractUploadTestCase extends WebTestCase
 {
     /**
      * Assert that response has errors.

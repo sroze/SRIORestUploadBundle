@@ -32,15 +32,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('processors')
-                    ->useAttributeAsKey('name')
-                    ->defaultValue(array(
-                        'simple' => 'SRIO\RestUploadBundle\Upload\Processor\SimpleUploadProcessor',
-                        'multipart' => 'SRIO\RestUploadBundle\Upload\Processor\MultipartUploadProcessor',
-                        'resumable' => 'SRIO\RestUploadBundle\Upload\Processor\ResumableUploadProcessor'
-                    ))
-                    ->prototype('scalar')->end()
-                ->end()
             ->end();
 
 

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractUploadProcessor
+abstract class AbstractUploadProcessor implements ProcessorInterface
 {
     /**
      * @var FormInterface
@@ -27,13 +27,17 @@ abstract class AbstractUploadProcessor
     /**
      * Constructor.
      *
+     * @param Request $request
      * @param FormInterface $form
      * @param array $config
+     * @return boolean
      */
-    public function __construct (FormInterface $form, array $config)
+    public function handleUpload (Request $request, FormInterface $form, array $config)
     {
         $this->form = $form;
         $this->config = $config;
+
+        return $this->handleRequest($request);
     }
 
     /**
@@ -43,6 +47,7 @@ abstract class AbstractUploadProcessor
      * to the client or will be caught by controller.
      *
      * @param Request $request
+     * @return boolean
      */
     abstract public function handleRequest (Request $request);
 
@@ -53,6 +58,7 @@ abstract class AbstractUploadProcessor
      * provided data.
      *
      * @param array $data
+     * @return array
      */
     protected function createFormData (array $data)
     {
@@ -64,6 +70,7 @@ abstract class AbstractUploadProcessor
      * Get keys of the form.
      *
      * @param FormInterface $form
+     * @return array
      */
     protected function getFormKeys (FormInterface $form)
     {
@@ -159,6 +166,7 @@ abstract class AbstractUploadProcessor
      * @param $length
      * @param $content
      * @throws \SRIO\RestUploadBundle\Exception\InternalUploadProcessorException
+     * @return integer Wrote bytes
      */
     protected function writeFile ($file, $position, $length, $content)
     {

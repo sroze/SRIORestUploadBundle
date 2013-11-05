@@ -4,6 +4,7 @@ namespace SRIO\RestUploadBundle\Upload;
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Upload\Processor\AbstractUploadProcessor;
+use SRIO\RestUploadBundle\Upload\Processor\ProcessorInterface;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -19,12 +20,35 @@ class UploadManager
     protected $config;
 
     /**
+     * @var array
+     */
+    protected $processors;
+
+    /**
      * Constructor.
      *
      */
     public function __construct (array $config)
     {
         $this->config = $config;
+        $this->processors = array();
+    }
+
+    /**
+     * Add an upload processor.
+     *
+     * @param ProcessorInterface $processor
+     */
+    public function addProcessor ($uploadType, ProcessorInterface $processor)
+    {
+        if (array_key_exists($uploadType, $this->processors)) {
+            throw new \LogicException(sprintf(
+                'A processor is already registered for type %s',
+                $uploadType
+            ));
+        }
+
+        $this->processors[$uploadType] = $processor;
     }
 
     /**
@@ -37,8 +61,10 @@ class UploadManager
     public function handleRequest (FormInterface $form, Request $request, array $extraConfig = array())
     {
         try {
-            $processor = $this->createProcessor($form, $request, $extraConfig);
-            if ($processor->handleRequest($request)) {
+            $config = array_merge($this->config, $extraConfig);
+            $processor = $this->getProcessor($request, $config);
+
+            if ($processor->handleUpload($request, $form, $config)) {
                 return $this->returnSuccessResponse($form);
             } else {
                 return $this->returnFormErrors($form);
@@ -116,32 +142,20 @@ class UploadManager
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array $extraConfig
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
-     * @return AbstractUploadProcessor
+     * @return ProcessorInterface
      */
-    protected function createProcessor (FormInterface $form, Request $request, array $extraConfig)
+    protected function getProcessor (Request $request, array $config)
     {
-        $uploadType = $request->get($this->getParameterName('uploadType'));
-        $config = array_merge($this->config, $extraConfig);
+        $uploadType = $request->get($this->getParameterName('uploadType', $config));
 
-        $processors = $config['processors'];
-        if (!array_key_exists($uploadType, $processors)) {
+        if (!array_key_exists($uploadType, $this->processors)) {
             throw new UploadProcessorException(sprintf(
                 'Unknown upload processor for upload type %s',
                 $uploadType
             ));
         }
 
-        $className = $processors[$uploadType];
-        $abstractClass = 'SRIO\RestUploadBundle\Upload\Processor\AbstractUploadProcessor';
-        if (!is_subclass_of($className, $abstractClass)) {
-            throw new UploadProcessorException(sprintf(
-                'Processor %s must extends %s',
-                $className,
-                $abstractClass
-            ));
-        }
-
-        return new $className($form, $config);
+        return $this->processors[$uploadType];
     }
 
     /**
@@ -150,8 +164,8 @@ class UploadManager
      * @param $parameter
      * @return mixed
      */
-    protected function getParameterName ($parameter)
+    protected function getParameterName ($parameter, $config)
     {
-        return $this->config['parameters'][$parameter];
+        return $config['parameters'][$parameter];
     }
 }
