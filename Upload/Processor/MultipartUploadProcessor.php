@@ -11,6 +11,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
 {
     /**
      * @param Request $request
+     * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
      */
     public function handleRequest (Request $request)
     {
@@ -56,6 +57,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      * Get the form data from the request.
      *
      * @param Request $request
+     * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @return array
      */
     protected function getFormData (Request $request)
@@ -82,7 +84,9 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Get the content part of the request.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param Request $request
+     * @return array
      */
     protected function getContent (Request $request)
     {
@@ -93,7 +97,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      * Check multipart headers.
      *
      * @param Request $request
-     * @throws \SRIO\RestUploadBundle\Exception\UploadException
+     * @param array $headers
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      */
     protected function checkHeaders (Request $request, array $headers = array())
@@ -116,6 +120,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      *
      * @param Request $request
      * @param $part
+     * @return array
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      */
     protected function getPart (Request $request, $part)
@@ -172,9 +177,10 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      * Get part of a resource.
      *
      * @param $resource
+     * @param $boundary
      * @param int $part
-     * @return string
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     * @return string
      */
     protected function getResourcePart ($resource, $boundary, $part)
     {
@@ -215,8 +221,11 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      * Get part of a string.
      *
      * @param $string
-     * @param $boudary
+     * @param $boundary
      * @param $part
+     * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     * @internal param $boudary
+     * @return string
      */
     protected function getStringPart ($string, $boundary, $part)
     {

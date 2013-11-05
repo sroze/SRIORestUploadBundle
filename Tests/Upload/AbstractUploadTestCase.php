@@ -6,6 +6,28 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AbstractUploadTestCase extends WebTestCase
 {
+    /**
+     * Assert that response has errors.
+     *
+     * @param Client $client
+     */
+    protected function assertResponseHasErrors (Client $client)
+    {
+        $response = $client->getResponse();
+        $this->assertEquals(400, $response->getStatusCode());
+        $jsonContent = json_decode($response->getContent(), true);
+        $this->assertNotEmpty($jsonContent);
+        $this->assertTrue(array_key_exists('errors', $jsonContent));
+    }
+
+    /**
+     * Get content of a resource.
+     *
+     * @param Client $client
+     * @param $name
+     * @return string
+     * @throws \RuntimeException
+     */
     protected function getResource (Client $client, $name)
     {
         $filePath = $this->getResourcePath($client, $name);
