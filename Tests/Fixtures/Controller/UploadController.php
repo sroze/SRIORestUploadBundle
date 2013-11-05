@@ -26,6 +26,11 @@ class UploadController extends Controller
 
         if ($form->isValid()) {
             $media = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($media);
+            $em->flush();
+
             return new JsonResponse($media);
         }
 

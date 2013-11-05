@@ -11,6 +11,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
+            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
 
             new SRIO\RestUploadBundle\SRIORestUploadBundle(),
         );

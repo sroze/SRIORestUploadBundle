@@ -1,3 +1,6 @@
+imports:
+    - { resource: parameters.yml }
+
 framework:
     secret:          MySecret
     templating:      { engines: ['twig'] }
@@ -8,6 +11,32 @@ framework:
     default_locale:  en
     translator:      { fallback: en }
     profiler:        { only_exceptions: false }
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   %database_driver%
+        host:     %database_host%
+        port:     %database_port%
+        dbname:   %database_name%
+        user:     %database_user%
+        password: %database_password%
+        charset:  UTF8
+
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+        mappings:
+            RestUploadBundleTest:
+                type: annotation
+                is_bundle: false
+                dir: %kernel.root_dir%/../../Entity
+                prefix: SRIO\RestUploadBundle\Tests\Fixtures\Entity
+                alias: RestUploadBundleTest
+
+            SRIORestUploadBundle:
+                type: xml
+                is_bundle: true
 
 # enable the web profiler
 web_profiler:
