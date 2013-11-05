@@ -75,6 +75,22 @@ abstract class AbstractUploadProcessor
     }
 
     /**
+     * Check that needed headers are here.
+     *
+     * @throws \SRIO\RestUploadBundle\Exception\UploadException
+     */
+    protected function checkHeaders (Request $request, array $headers)
+    {
+        foreach ($headers as $header) {
+            if (!$request->headers->has($header)) {
+                throw new UploadException(sprintf('%s header is needed', $header));
+            } else if ($request->headers->get($header, null) == null) {
+                throw new UploadException(sprintf('%s header must not be empty', $header));
+            }
+        }
+    }
+
+    /**
      * Set the uploaded file on the form data.
      *
      * @param UploadedFile $file
@@ -151,8 +167,10 @@ abstract class AbstractUploadProcessor
             throw new InternalUploadProcessorException('Unable to seek to specified file position');
         }
 
-        if (@fwrite($resource, $content, $length) === false) {
+        if (($wrote = @fwrite($resource, $content, $length ?: strlen($content))) === false) {
             throw new InternalUploadProcessorException('Unable to write content to file');
         }
+
+        return $wrote;
     }
 }

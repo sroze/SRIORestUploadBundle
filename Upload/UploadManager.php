@@ -92,12 +92,20 @@ class UploadManager
 
         $children = $form->all();
         if (count($children) > 0) {
-            $list['children'] = array();
-
+            $childrenErrors = array();
             foreach ($children as $child) {
-                $list['children'][$child->getName()] = $this->computeFormErrors($child);
+                /** @var $child FormInterface */
+                $errors = $this->computeFormErrors($child);
+                if (!empty($errors)) {
+                    $childrenErrors[$child->getName()] = $errors;
+                }
+            }
+
+            if (!empty($childrenErrors)) {
+                $list['children'] = $childrenErrors;
             }
         }
+
         return $list;
     }
 

@@ -9,22 +9,20 @@ use Symfony\Component\HttpFoundation\Request;
 class SimpleUploadProcessor extends AbstractUploadProcessor
 {
     /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
      * @param Request $request
      */
     public function handleRequest (Request $request)
     {
+        // Check that needed headers exists
+        $this->checkHeaders($request, array('Content-Length', 'Content-Length'));
+
         // Submit form data
         $formData = $this->createFormData($request->query->all());
         $this->form->submit($formData);
         if (!$this->form->isValid()) {
             return;
-        }
-
-        // Check that needed headers exists
-        if (!$request->headers->has('Content-Type')) {
-            throw new UploadException('Content-Type header is needed');
-        } else if (!$request->headers->has('Content-Length')) {
-            throw new UploadException('Content-Length header is needed');
         }
 
         // Handle the file content
