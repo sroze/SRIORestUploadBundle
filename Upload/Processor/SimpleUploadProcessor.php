@@ -16,7 +16,7 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
     public function handleRequest (Request $request)
     {
         // Check that needed headers exists
-        $this->checkHeaders($request, array('Content-Length', 'Content-Length'));
+        $this->checkHeaders($request, array('Content-Length', 'Content-Type'));
 
         // Submit form data
         $formData = $this->createFormData($request->query->all());

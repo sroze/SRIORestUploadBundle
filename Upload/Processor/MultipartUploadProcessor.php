@@ -112,7 +112,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
             ));
         }
 
-        parent::checkHeaders($request, array('Content-Length', 'Content-Length'));
+        parent::checkHeaders($request, array('Content-Type', 'Content-Length'));
     }
 
     /**
