@@ -25,7 +25,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
         // Submit form data
         $this->form->submit($formData);
         if (!$this->form->isValid()) {
-            return;
+            return false;
         }
 
         // Handle the file content
@@ -45,6 +45,8 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
             );
 
             $this->setUploadedFile($uploadedFile);
+
+            return true;
         } catch (UploadException $e) {
             $this->closeFile($file);
             $this->unlinkFile($file);

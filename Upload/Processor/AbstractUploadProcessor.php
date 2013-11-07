@@ -47,7 +47,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      * to the client or will be caught by controller.
      *
      * @param Request $request
-     * @return boolean
+     * @return boolean|Response
      */
     abstract public function handleRequest (Request $request);
 
@@ -118,12 +118,26 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     }
 
     /**
+     * Create a unique non existing file path.
+     *
+     * @return string
+     */
+    protected function createFilePath ()
+    {
+        do {
+            $filePath = $this->config['upload_dir'].'/'.uniqid();
+        } while (file_exists($filePath));
+
+        return $filePath;
+    }
+
+    /**
      * Open a file.
      *
      */
     protected function openFile ()
     {
-        $filePath = $this->config['upload_dir'].'/'.uniqid();
+        $filePath = $this->createFilePath();
         $resource = fopen($filePath, 'a');
         if ($resource === false) {
             throw new InternalUploadProcessorException('Unable to open file');

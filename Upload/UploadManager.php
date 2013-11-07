@@ -64,7 +64,10 @@ class UploadManager
             $config = array_merge($this->config, $extraConfig);
             $processor = $this->getProcessor($request, $config);
 
-            if ($processor->handleUpload($request, $form, $config)) {
+            $response = $processor->handleUpload($request, $form, $config);
+            if ($response instanceof Response) {
+                return $response;
+            } else if ($response) {
                 return $this->returnSuccessResponse($form);
             } else {
                 return $this->returnFormErrors($form);

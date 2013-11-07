@@ -5,6 +5,7 @@ use SRIO\RestUploadBundle\Exception\UploadException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class SimpleUploadProcessor extends AbstractUploadProcessor
 {
@@ -12,6 +13,7 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
      * @param Request $request
+     * @return boolean|Response
      */
     public function handleRequest (Request $request)
     {
@@ -22,7 +24,7 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
         $formData = $this->createFormData($request->query->all());
         $this->form->submit($formData);
         if (!$this->form->isValid()) {
-            return;
+            return false;
         }
 
         // Handle the file content
@@ -42,6 +44,8 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
             );
 
             $this->setUploadedFile($uploadedFile);
+
+            return true;
         } catch (UploadException $e) {
             $this->closeFile($file);
             $this->unlinkFile($file);
