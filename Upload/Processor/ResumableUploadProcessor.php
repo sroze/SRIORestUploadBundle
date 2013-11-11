@@ -157,13 +157,16 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
                     $uploadSession->getContentLength(),
                     $range['total']
                 ));
-            } else if ($range['start'] == '*') {
+            } else if ($range['start'] === '*') {
                 if ($contentLength == 0) {
                     return $this->requestUploadStatus($uploadSession, $range);
                 }
 
                 throw new UploadProcessorException('Content-Length must be 0 if asking upload status');
-            } else if ($range['start'] != ($uploaded = (filesize($uploadSession->getFilePath()) - 1))) {
+            }
+
+            $uploaded = file_exists($uploadSession->getFilePath()) ? filesize($uploadSession->getFilePath()) : 0;
+            if ($range['start'] != $uploaded) {
                 throw new UploadProcessorException(sprintf(
                     'Unable to start at %d while uploaded is %d',
                     $range['start'],
@@ -171,15 +174,20 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
                 ));
             }
         } else {
-            $range = array('start' => 0, 'end' => $uploadSession->getContentLength() - 1);
+            $range = array(
+                'start' => 0,
+                'end' => $uploadSession->getContentLength() - 1,
+                'total' => $uploadSession->getContentLength() - 1
+            );
         }
 
         // Handle upload from
         $handler = $this->getRequestContentHandler($request);
         $writer = new FileWriter($uploadSession->getFilePath());
         $writer->seek($range['start']);
+        $wrote = 0;
         while (!$handler->eof()) {
-            $writer->write($handler->gets());
+            $wrote += $writer->write($handler->gets());
         }
         $writer->close();
 
@@ -234,6 +242,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
         if (!file_exists($filePath)) {
             $length = 0;
         } else {
+            clearstatcache(true, $filePath);
             $length = filesize($filePath);
         }
 
@@ -262,19 +271,19 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
         }
 
         $range = array(
-            'start' => $matches[1] == '*' ? '*' : $matches[2],
-            'end' => $matches[3],
-            'total' => $matches[4]
+            'start' => $matches[1] === '*' ? '*' : ($matches[2] === '' ? null : (int) $matches[2]),
+            'end' => $matches[3] === '' ? null : (int) $matches[3],
+            'total' => (int) $matches[4]
         );
 
         if (empty($range['total'])) {
             throw new UploadProcessorException('Content-Range total length not found');
         }
-        if ($range['start'] == '*') {
-            if (!empty($range['end'])) {
+        if ($range['start'] === '*') {
+            if ($range['end'] !== null) {
                 throw new UploadProcessorException('Content-Range end must not be present if start is "*"');
             }
-        } else if ($range['start'] === '' || $range['end'] === '') {
+        } else if ($range['start'] === null || $range['end'] === null) {
             throw new UploadProcessorException('Content-Range end or start is empty');
         } else if ($range['start'] > $range['end']) {
             throw new UploadProcessorException('Content-Range start must be lower than end');

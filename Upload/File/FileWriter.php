@@ -1,6 +1,8 @@
 <?php
 namespace SRIO\RestUploadBundle\Upload\File;
 
+use SRIO\RestUploadBundle\Exception\InternalUploadProcessorException;
+
 class FileWriter implements FileWriterInterface
 {
     /**
@@ -12,6 +14,16 @@ class FileWriter implements FileWriterInterface
      * @var resource
      */
     protected $resource = null;
+
+    /**
+     * @var integer
+     */
+    protected $size = null;
+
+    /**
+     * @var integer
+     */
+    protected $cursor = null;
 
     /**
      * Constructor.
@@ -31,7 +43,16 @@ class FileWriter implements FileWriterInterface
      */
     public function seek($position)
     {
-        return fseek($this->getResource(), $position);
+        if (fseek($this->getResource(), $position) !== 0) {
+            throw new InternalUploadProcessorException(sprintf(
+                'Unable to seek on %d',
+                $position
+            ));
+        }
+
+        $this->cursor = $position;
+
+        return $this->cursor;
     }
 
     /**
@@ -44,10 +65,15 @@ class FileWriter implements FileWriterInterface
     public function write($content, $length = null)
     {
         if ($length !== null) {
-            return fwrite($this->getResource(), $content, $length);
+            $wrote = fwrite($this->getResource(), $content, $length);
         } else {
-            return fwrite($this->getResource(), $content);
+            $wrote = fwrite($this->getResource(), $content);
         }
+
+        $this->size = $this->cursor + $wrote;
+        $this->cursor += $wrote;
+
+        return $wrote;
     }
 
     /**
@@ -69,9 +95,14 @@ class FileWriter implements FileWriterInterface
      *
      * @return int
      */
-    public function size ()
+    public function size ($clear = false)
     {
-        return filesize($this->path);
+        if ($clear) {
+            clearstatcache(true, $this->path);
+            $this->size = filesize($this->path);
+        }
+
+        return $this->size;
     }
 
     /**
@@ -94,7 +125,7 @@ class FileWriter implements FileWriterInterface
     protected function getResource ()
     {
         if ($this->resource === null) {
-            $this->resource = fopen($this->path, 'a');
+            $this->resource = fopen($this->path, 'c');
         }
 
         return $this->resource;

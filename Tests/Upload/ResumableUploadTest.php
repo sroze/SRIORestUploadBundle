@@ -22,6 +22,34 @@ class ResumableUploadTest extends AbstractUploadTestCase
         $this->assertSuccessful($response, $content);
     }
 
+    public function testChunkedUpload ()
+    {
+        $client = $this->startSession();
+
+        $response = $client->getResponse();
+        $location = $response->headers->get('Location');
+        $content = $this->getResource($client, 'apple.gif');
+        $chunkSize = 256;
+
+        for ($start = 0; $start < strlen($content); $start += $chunkSize) {
+            $part = substr($content, $start, $chunkSize);
+            $end = $start + strlen($part) - 1;
+            $client->request('PUT', $location, array(), array(), array(
+                'CONTENT_TYPE' => 'image/gif',
+                'CONTENT_LENGTH' => strlen($part),
+                'HTTP_Content-Range' => 'bytes '.$start.'-'.$end.'/'.strlen($content)
+            ), $part);
+
+            $response = $client->getResponse();
+            if (($start + $chunkSize) < strlen($content)) {
+                $this->assertEquals(308, $response->getStatusCode());
+                $this->assertEquals('0-'.$end, $response->headers->get('Range'));
+            }
+        }
+
+        $this->assertSuccessful($response, $content);
+    }
+
     protected function startSession ()
     {
         $client = static::createClient();
