@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>SRIORestUploadBundle</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Handle multiple upload ways on your Symfony2 REST API">
+        <meta name="author" content="Samuel ROZE">
+        <meta name="keywords" content="srio, rest, upload, bundle, symfony2, resumable, multipart" />
+
+        <!-- Le styles -->
+        <link href="assets/css/vendor/1-bootstrap.min.css" rel="stylesheet" />
+        <link href="assets/css/vendor/1-bootstrap-theme.min.css" rel="stylesheet" />
+        <link href="assets/css/vendor/3-prettify.css" rel="stylesheet" />
+        <link href="assets/css/docs.css" rel="stylesheet" />
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="assets/js/html5shiv.js"></script>
+        <![endif]-->
+        
+        <!-- Top scripts -->
+        <script type="text/javascript" src="assets/js/vendor/1-jquery-1.9.1.js"></script>
+        <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+        ga('create', 'UA-41885358-2', 'sroze.github.io');
+        ga('send', 'pageview');
+        </script>
+    </head>
+
+    <body data-spy="scroll" data-target="#navbar">
+        <div class="jumbotron masthead">
+            <div class="container">
+                <img src="assets/images/logo.png" />
+                <h1>SRIORestUploadBundle</h1>
+                <p>Handle multiple upload ways on your Symfony2 REST API</p>
+                <p>
+                    <a href="https://github.com/sroze/SRIORestUploadBundle" class="btn btn-success btn-large">View on GitHub</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="bs-docs-social">
+            <div class="container">
+                <ul class="bs-docs-social-buttons">
+                    <li>
+                        <iframe class="github-btn" src="http://ghbtns.com/github-btn.html?user=sroze&repo=SRIORestUploadBundle&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+                    </li>
+                    <li>
+                        <a href="https://api.travis-ci.org/sroze/SRIORestUploadBundle" title="Travis Build Status"><img src="https://api.travis-ci.org/sroze/SRIORestUploadBundle.png" /></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="navbar" data-spy="affix" data-offset-top="480">
+            <ul class="nav nav-pills">
+                <li class="active"><a href="#installation">Installation</a></li>
+                <li><a href="#uploadWays">Upload ways</a></li>
+                <li><a href="#configuration">Configuration reference</a></li>
+                <li><a href="#testing">Testing</a></li>
+            </ul>
+        </div>
+
+        <div class="container documentation">
+            <div class="row">
+                <div class="col-lg-12" id="installation">
+                    <h1>Installation</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <ol>
+                        <li>
+                            <p><strong>Add SRIORestUploadBundle in your dependencies</strong></p>
+                            <pre class="prettyprint">{
+    "require": {
+        "srio/rest-upload-bundle": "dev-master"
+    }
+}</pre>
+                            <p>Now tell composer to download the bundle by running the command:</p>
+                            <pre class="prettyprint">$ php composer.phar update srio/rest-upload-bundle</pre>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-6">
+                    <ol start="2">
+                        <li>
+                            <p><strong>Enable the bundle in the kernel</strong></p>
+                            <pre class="prettyprint lang-php">// app/AppKernel.php
+public function registerBundles()
+{
+    $bundles = array(
+        // ...
+        new SRIO\RestUploadBundle\SRIORestUploadBundle(),
+    );
+}</pre>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12" id="uploadWays">
+                    <h1>Supported upload ways</h1>
+                    <p>The <code>SRIORestUploadBundle</code> supports three ways of file upload.</p>
+                    <ol>
+                        <li><a href="#">The <strong>simple</strong> way</a>: send binary data to an URL and use query parameters to submit additional data.</li>
+                        <li><a href="#">The <strong>multipart</strong> way</a>: send both JSON and binary data using the <a href="http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html">multipart Content-Type</a>.</li>
+                        <li><a href="#">The <strong>resumable</strong> way</a>: start a resumable upload session by sending JSON data and then send file entirely or by chunks. It allow to restart a failed upload where it stops.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12" id="configuration">
+                    <h1>Configuration reference</h1>
+                    <p>Here is the configuration reference of <code>SRIORestUploadBundle</code>:</p>
+                    <pre class="prettyprint"># RestUploadBundle configuration
+srio_rest_upload:
+    upload_dir: %kernel.root_dir%/../web/uploads
+    resumableUploadSessionEntity: RestUploadBundleTest:ResumableUploadSession</pre>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12" id="testing">
+                    <h1>Testing</h1>
+                    <p>TODO</p>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <p>Designed and built with love by <a href="http://github.com/sroze" target="_blank">@sroze</a>.</p>
+                <p>Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+            </div>
+        </footer>
+
+        <script type="text/javascript" src="assets/js/vendor/2-bootstrap.min.js"></script>
+        <script type="text/javascript" src="assets/js/vendor/1-json2.js"></script>
+        <script type="text/javascript" src="assets/js/vendor/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/docs.js"></script>
+    </body>
+</html>
