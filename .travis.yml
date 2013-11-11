@@ -1,0 +1,16 @@
+language: php
+php:
+  - 5.5
+  - 5.4
+
+before_script:
+    - composer install --dev
+    - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS restuploadbundle;'; fi"
+    - php Tests/Fixtures/App/app/console doctrine:schema:update --force --env=test
+
+script: phpunit
+
+notifications:
+    email:
+        - travis+restuploadbundle@sroze.io
+        - samuel.roze@gmail.com
