@@ -46,4 +46,4 @@ web_profiler:
 # RestUploadBundle configuration
 srio_rest_upload:
     upload_dir: %kernel.root_dir%/../web/uploads
-    resumableUploadSessionEntity: RestUploadBundleTest:ResumableUploadSession
+    resumable_entity: SRIO\RestUploadBundle\Tests\Fixtures\Entity\ResumableUploadSession

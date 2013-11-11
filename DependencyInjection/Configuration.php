@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('upload_dir')->isRequired()->cannotBeEmpty()->end()
-                ->scalarNode('resumableUploadSessionEntity')->end()
+                ->scalarNode('resumable_entity')->end()
                 ->arrayNode('parameters')
                     ->addDefaultsIfNotSet()
                     ->canBeUnset()

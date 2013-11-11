@@ -47,10 +47,10 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      */
     public function handleUpload (Request $request, FormInterface $form, array $config)
     {
-        if (!array_key_exists('resumableUploadSessionEntity', $config)) {
+        if (!array_key_exists('resumable_entity', $config)) {
             throw new UploadProcessorException(sprintf(
                 'You must configure the "%s" option',
-                'resumableUploadSessionEntity'
+                'resumable_entity'
             ));
         }
 
@@ -301,7 +301,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      */
     protected function getRepository ()
     {
-        return $this->em->getRepository($this->config['resumableUploadSessionEntity']);
+        return $this->em->getRepository($this->config['resumable_entity']);
     }
 
     /**
