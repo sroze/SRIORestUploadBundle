@@ -44,6 +44,16 @@ class ResumableUploadTest extends AbstractUploadTestCase
             if (($start + $chunkSize) < strlen($content)) {
                 $this->assertEquals(308, $response->getStatusCode());
                 $this->assertEquals('0-'.$end, $response->headers->get('Range'));
+
+                $client->request('PUT', $location, array(), array(), array(
+                    'CONTENT_LENGTH' => 0,
+                    'HTTP_Content-Range' => 'bytes */'.strlen($content)
+                ));
+
+                $response = $client->getResponse();
+                echo $response->getContent();
+                $this->assertEquals(308, $response->getStatusCode());
+                $this->assertEquals('0-'.$end, $response->headers->get('Range'));
             }
         }
 

@@ -113,7 +113,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
         foreach ($headers as $header) {
             if (!$request->headers->has($header)) {
                 throw new UploadException(sprintf('%s header is needed', $header));
-            } else if ($request->headers->get($header, null) == null) {
+            } else if ($request->headers->get($header, null) === null) {
                 throw new UploadException(sprintf('%s header must not be empty', $header));
             }
         }
