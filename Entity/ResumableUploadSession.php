@@ -26,6 +26,27 @@ class ResumableUploadSession
     protected $filePath;
 
     /**
+     * The form data.
+     *
+     * @var string
+     */
+    protected $data;
+
+    /**
+     * Content type.
+     *
+     * @var string
+     */
+    protected $contentType;
+
+    /**
+     * Content length.
+     *
+     * @var integer
+     */
+    protected $contentLength;
+
+    /**
      * @param string $filePath
      */
     public function setFilePath($filePath)
@@ -55,5 +76,53 @@ class ResumableUploadSession
     public function getSessionId()
     {
         return $this->sessionId;
+    }
+
+    /**
+     * @param string $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param int $contentLength
+     */
+    public function setContentLength($contentLength)
+    {
+        $this->contentLength = $contentLength;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContentLength()
+    {
+        return $this->contentLength;
+    }
+
+    /**
+     * @param string $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
     }
 }

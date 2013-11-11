@@ -6,6 +6,10 @@
 
     <mapped-superclass name="SRIO\RestUploadBundle\Entity\ResumableUploadSession">
         <field name="sessionId" column="sessionId" type="string" length="255" />
+        <field name="contentType" column="contentType" type="string" length="255" />
+        <field name="contentLength" column="contentLength" type="integer" />
+
         <field name="filePath" column="filePath" type="text" />
+        <field name="data" column="data" type="text" />
     </mapped-superclass>
 </doctrine-mapping>
