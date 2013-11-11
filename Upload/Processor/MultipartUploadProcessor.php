@@ -3,6 +3,7 @@ namespace SRIO\RestUploadBundle\Upload\Processor;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
+use SRIO\RestUploadBundle\Upload\File\FileWriter;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,16 +30,17 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
         }
 
         // Handle the file content
-        $file = $this->openFile();
+        $filePath = $this->createFilePath();
+        $writer = new FileWriter($filePath);
         list($contentType, $content) = $this->getContent($request);
 
         try {
-            $contentLength = $this->writeFile($file, 0, null, $content);
-            $this->closeFile($file);
+            $contentLength = $writer->write($content);
+            $writer->close();
 
             // Create the uploaded file
             $uploadedFile = new UploadedFile(
-                $file['path'],
+                $filePath,
                 null,
                 $contentType,
                 $contentLength
@@ -48,8 +50,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
 
             return true;
         } catch (UploadException $e) {
-            $this->closeFile($file);
-            $this->unlinkFile($file);
+            $writer->unlink();
 
             throw $e;
         }
@@ -58,13 +59,15 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Get the form data from the request.
      *
+     * Note: MUST be called before getContent, and just one time.
+     *
      * @param Request $request
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @return array
      */
     protected function getFormData (Request $request)
     {
-        list($boundaryContentType, $boundaryContent) = $this->getPart($request, 1);
+        list($boundaryContentType, $boundaryContent) = $this->getPart($request);
 
         $expectedContentType = 'application/json';
         if (substr($boundaryContentType, 0, strlen($expectedContentType)) != $expectedContentType) {
@@ -86,13 +89,15 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Get the content part of the request.
      *
+     * Note: MUST be called after getFormData, and just one time.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param Request $request
      * @return array
      */
     protected function getContent (Request $request)
     {
-        return $this->getPart($request, 2);
+        return $this->getPart($request);
     }
 
     /**
@@ -125,36 +130,22 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      * @return array
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      */
-    protected function getPart (Request $request, $part)
+    protected function getPart (Request $request)
     {
         list($contentType, $boundary) = $this->parseContentTypeAndBoundary($request);
-
-        $content = null;
-        try {
-            $handle = $request->getContent(true);
-            $content = $this->getResourcePart($handle, $boundary, $part);
-        } catch (\LogicException $e) {
-            $handle = $request->getContent(false);
-            if (!$handle) {
-                throw new UploadProcessorException('Unable to read PHP input stream');
-            }
-
-            $content = $this->getStringPart($handle, $boundary, $part);
-        }
+        $content = $this->getRequestPart($request, $boundary);
 
         if (empty($content)) {
-            throw new UploadProcessorException(sprintf('An empty content found for part %d', $part));
+            throw new UploadProcessorException(sprintf('An empty content found'));
         }
 
-        $headerLimitation = strpos($content, PHP_EOL.PHP_EOL);
+        $headerLimitation = strpos($content, PHP_EOL.PHP_EOL) + 1;
         if ($headerLimitation == -1) {
             throw new UploadProcessorException('Unable to determine headers limit');
         }
 
-        $delimiter = '--'.$boundary;
         $contentType = null;
-        $headersOffset = strlen($delimiter);
-        $headersContent = substr($content, $headersOffset, $headerLimitation - $headersOffset);
+        $headersContent = substr($content, 0, $headerLimitation);
         $headersContent = trim($headersContent);
         $body = substr($content, $headerLimitation);
         $body = trim($body);
@@ -178,90 +169,42 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Get part of a resource.
      *
-     * @param $resource
+     * @param Request $request
      * @param $boundary
-     * @param int $part
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @return string
      */
-    protected function getResourcePart ($resource, $boundary, $part)
+    protected function getRequestPart (Request $request, $boundary)
     {
+        $contentHandler = $this->getRequestContentHandler($request);
+
         $delimiter = '--'.$boundary.PHP_EOL;
+        $endDelimiter = '--'.$boundary.'--';
         $boundaryCount = 0;
         $content = '';
-        while (!feof($resource)) {
-            $line = fgets($resource);
+        while (!$contentHandler->eof()) {
+            $line = $contentHandler->gets();
             if ($line === false) {
                 throw new UploadProcessorException('An error appears while reading input');
-            } else if (empty($line) || $line == PHP_EOL) {
-                continue;
             }
 
             if ($boundaryCount == 0) {
                 if ($line != $delimiter) {
-                    throw new UploadProcessorException('Expected boundary delimiter');
+                    if ($contentHandler->getCursor() == strlen($line)) {
+                        throw new UploadProcessorException('Expected boundary delimiter');
+                    }
+                } else {
+                    continue;
                 }
 
                 $boundaryCount++;
             } else if ($line == $delimiter) {
-                $boundaryCount++;
-
-                if ($boundaryCount > $part) {
-                    break;
-                }
-            }
-
-            if ($boundaryCount == $part) {
-                $content .= $line;
-            }
-        }
-
-        return trim($content);
-    }
-
-    /**
-     * Get part of a string.
-     *
-     * @param $string
-     * @param $boundary
-     * @param $part
-     * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
-     * @internal param $boudary
-     * @return string
-     */
-    protected function getStringPart ($string, $boundary, $part)
-    {
-        $delimiter = '--'.$boundary.PHP_EOL;
-        $boundaryCount = 0;
-        $offset = 0;
-        $content = '';
-        while ($offset != -1) {
-            $next = strpos($string, PHP_EOL, $offset);
-            if ($next < 0 || $next === false) {
+                break;
+            } else if ($line == $endDelimiter || $line == $endDelimiter.PHP_EOL) {
                 break;
             }
 
-            $length = $next - $offset + 1;
-            $line = substr($string, $offset, $length);
-            $offset = $next + 1;
-
-            if ($boundaryCount == 0) {
-                if ($line != $delimiter) {
-                    throw new UploadProcessorException('Expected boundary delimiter');
-                }
-
-                $boundaryCount++;
-            } else if ($line == $delimiter) {
-                $boundaryCount++;
-
-                if ($boundaryCount > $part) {
-                    break;
-                }
-            }
-
-            if ($boundaryCount == $part) {
-                $content .= $line;
-            }
+            $content .= $line;
         }
 
         return trim($content);

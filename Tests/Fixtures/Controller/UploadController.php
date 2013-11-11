@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 class UploadController extends Controller
 {
@@ -22,9 +23,11 @@ class UploadController extends Controller
     {
         $form = $this->createForm(new MediaFormType());
         $uploadManager = $this->get('srio_rest_upload.upload_manager');
-        $response = $uploadManager->handleRequest($form, $request);
+        $result = $uploadManager->handleRequest($form, $request);
 
-        if ($form->isValid()) {
+        if ($result instanceof Response) {
+            return $result;
+        } else if ($form->isValid()) {
             $media = $form->getData();
 
             $em = $this->getDoctrine()->getManager();
@@ -32,8 +35,8 @@ class UploadController extends Controller
             $em->flush();
 
             return new JsonResponse($media);
+        } else {
+            return new NotAcceptableHttpException();
         }
-
-        return $response;
     }
 }

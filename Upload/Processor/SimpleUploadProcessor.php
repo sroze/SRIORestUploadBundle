@@ -2,6 +2,7 @@
 namespace SRIO\RestUploadBundle\Upload\Processor;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
+use SRIO\RestUploadBundle\Upload\File\FileWriter;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,15 +30,16 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
 
         // Handle the file content
         $length = (int) $request->headers->get('Content-Length');
-        $file = $this->openFile();
+        $filePath = $this->createFilePath();
+        $writer = new FileWriter($filePath);
 
         try {
-            $this->writeFile($file, 0, $length, $request->getContent());
-            $this->closeFile($file);
+            $writer->write($request->getContent(), $length);
+            $writer->close();
 
             // Create the uploaded file
             $uploadedFile = new UploadedFile(
-                $file['path'],
+                $filePath,
                 null,
                 $request->headers->get('Content-Type'),
                 $request->headers->get('Content-Length')
@@ -47,8 +49,7 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
 
             return true;
         } catch (UploadException $e) {
-            $this->closeFile($file);
-            $this->unlinkFile($file);
+            $writer->unlink();
 
             throw $e;
         }

@@ -5,6 +5,8 @@ use SRIO\RestUploadBundle\Exception\InternalUploadProcessorException;
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Model\UploadableFileInterface;
+use SRIO\RestUploadBundle\Upload\Request\RequestContentHandler;
+use SRIO\RestUploadBundle\Upload\Request\RequestContentHandlerInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -23,6 +25,11 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      * @var array
      */
     protected $config;
+
+    /**
+     * @var RequestContentHandler
+     */
+    protected $contentHandler = null;
 
     /**
      * Constructor.
@@ -82,6 +89,21 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     }
 
     /**
+     * Get a request content handler.
+     *
+     * @param Request $request
+     * @return RequestContentHandlerInterface
+     */
+    protected function getRequestContentHandler (Request $request)
+    {
+        if ($this->contentHandler === null) {
+            $this->contentHandler = new RequestContentHandler($request);
+        }
+
+        return $this->contentHandler;
+    }
+
+    /**
      * Check that needed headers are here.
      *
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
@@ -129,70 +151,5 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
         } while (file_exists($filePath));
 
         return $filePath;
-    }
-
-    /**
-     * Open a file.
-     *
-     */
-    protected function openFile ()
-    {
-        $filePath = $this->createFilePath();
-        $resource = fopen($filePath, 'a');
-        if ($resource === false) {
-            throw new InternalUploadProcessorException('Unable to open file');
-        }
-
-        return array(
-            'resource' => $resource,
-            'path' => $filePath
-        );
-    }
-
-    /**
-     * Close a file.
-     *
-     * @param $file
-     * @return bool
-     */
-    protected function closeFile ($file)
-    {
-        return @fclose($file['resource']);
-    }
-
-    /**
-     * Unlink a file.
-     *
-     * @param $file
-     * @return bool
-     */
-    protected function unlinkFile ($file)
-    {
-        return @unlink($file['path']);
-    }
-
-    /**
-     * Write some content on the resource starting at position, for a specified
-     * length.
-     *
-     * @param $resource
-     * @param $position
-     * @param $length
-     * @param $content
-     * @throws \SRIO\RestUploadBundle\Exception\InternalUploadProcessorException
-     * @return integer Wrote bytes
-     */
-    protected function writeFile ($file, $position, $length, $content)
-    {
-        $resource = $file['resource'];
-        if (@fseek($resource, $position) != 0) {
-            throw new InternalUploadProcessorException('Unable to seek to specified file position');
-        }
-
-        if (($wrote = @fwrite($resource, $content, $length ?: strlen($content))) === false) {
-            throw new InternalUploadProcessorException('Unable to write content to file');
-        }
-
-        return $wrote;
     }
 }
