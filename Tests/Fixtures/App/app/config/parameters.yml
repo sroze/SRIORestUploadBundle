@@ -2,9 +2,9 @@ parameters:
     database_driver:   pdo_pgsql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     restupload
-    database_user:     restupload
-    database_password: restupload
+    database_name:     restuploadbundle
+    database_user:     travis
+    database_password: ~
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1
