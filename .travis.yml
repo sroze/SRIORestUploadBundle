@@ -1,10 +1,13 @@
 language: php
+env:
+  - DB=mysql
+
 php:
   - 5.5
   - 5.4
 
 before_script:
-    - composer install --dev
+    - composer install --dev --no-interaction
     - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS restuploadbundle;'; fi"
     - php Tests/Fixtures/App/app/console doctrine:schema:update --force --env=test
 
