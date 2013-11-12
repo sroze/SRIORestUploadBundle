@@ -50,7 +50,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     /**
      * Handle an upload request.
      *
-     * This method return a Response object that will be sent beck
+     * This method return a Response object that will be sent back
      * to the client or will be caught by controller.
      *
      * @param Request $request

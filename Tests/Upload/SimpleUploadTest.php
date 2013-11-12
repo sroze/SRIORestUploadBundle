@@ -75,5 +75,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
         $this->assertEquals(strlen($content), $jsonContent['size']);
         $this->assertTrue(file_exists($jsonContent['path']));
         $this->assertEquals($content, file_get_contents($jsonContent['path']));
+        $this->assertTrue(array_key_exists('id', $jsonContent));
+        $this->assertNotEmpty($jsonContent['id']);
     }
 }

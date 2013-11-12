@@ -67,11 +67,11 @@ class UploadManager
             $response = $processor->handleUpload($request, $form, $config);
             if ($response instanceof Response) {
                 return $response;
-            } else if ($response) {
-                return $this->returnSuccessResponse($form);
-            } else {
+            } else if (!$response) {
                 return $this->returnFormErrors($form);
             }
+
+            return $response;
         } catch (UploadException $e) {
             $form->addError(new FormError($e->getMessage()));
 
