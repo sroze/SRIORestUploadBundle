@@ -62,13 +62,23 @@
                 <li class="active"><a href="#installation">Installation</a></li>
                 <li><a href="#uploadWays">Upload ways</a></li>
                 <li><a href="#configuration">Configuration reference</a></li>
-                <li><a href="#testing">Testing</a></li>
+                <li><a href="#testing">Testing & Custom processor</a></li>
             </ul>
         </div>
 
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <p align="center">
+                    The <code>SRIORestUploadBundle</code> provide you a simple ways to handle uploads on the server side.
+                    The main idea is that an upload is always an form (at least the name of the file) and a binary, and can be submitted by different ways.
+                    Currently, it supports the <a href="#simpleWay">simple</a>, <a href="#multipartWay">multipart</a> and <a href="#resumableWay">resumable</a> ways.
+                </p>
+            </div>
+        </div>
+
         <div class="container documentation">
-            <div class="row">
-                <div class="col-lg-12" id="installation">
+            <div class="row" id="installation">
+                <div class="col-lg-12">
                     <h1>Installation</h1>
                 </div>
             </div>
@@ -103,8 +113,8 @@ public function registerBundles()
                     </ol>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12" id="uploadWays">
+            <div class="row" id="uploadWays">
+                <div class="col-lg-12">
                     <h1>Supported upload ways</h1>
                     <p>The <code>SRIORestUploadBundle</code> supports three ways of file upload.</p>
                     <ol>
@@ -115,21 +125,52 @@ public function registerBundles()
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-12" id="configuration">
+            <div class="row" id="configuration">
+                <div class="col-lg-12">
                     <h1>Configuration reference</h1>
-                    <p>Here is the configuration reference of <code>SRIORestUploadBundle</code>:</p>
                     <pre class="prettyprint"># RestUploadBundle configuration
 srio_rest_upload:
+    # The directory where files will be uploaded
     upload_dir: %kernel.root_dir%/../web/uploads
-    resumableUploadSessionEntity: RestUploadBundleTest:ResumableUploadSession</pre>
+
+    # If you want to use the resumable upload way, you must set
+    # the class name of your entity which store the upload sessions.
+    resumable_entity: Foo\BarBundle\FooBarBundle\Entity\ResumableUploadSession
+
+    # A key map of the parameter and the effective parameter name in queries
+    parameters:
+        # Parameter the define the upload way, internally the provider selector
+        uploadType: uploadType</pre>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-lg-12" id="testing">
+                <div class="col-lg-6" id="testing">
                     <h1>Testing</h1>
-                    <p>TODO</p>
+                    <p>In order to launch tests of <code>SRIORestUploadBundle</code> which are based on <a href="http://phpunit.de/">PHPUnit</a> you have to:</p>
+                    <ul>
+                        <li>Clone the <a href="https://github.com/sroze/SRIORestUploadBundle">GitHub repository</a> and <code>cd</code> into</li>
+                        <li><p>Install vendors</p><pre class="prettyprint">$ composer install</pre></li>
+                        <li>Create database, allow access to a user, and set configuration in <code>Tests/Fixtures/App/app/config/parameters.yml</code> file</li>
+                        <li><p>Create the database schema for the <code>test</code> environment</p><pre class="prettyprint">$ php Tests/Fixtures/App/app/console doctrine:schema:update --force --env=test</pre></li>
+                        <li><p>Run PHPUnit</p><pre class="prettyprint">$ phpunit</pre></li>
+                    </ul>
+                </div>
+                <div class="col-lg-6" id="customProvider">
+                    <h1>Custom upload processor</h1>
+                    <p>You can easily create your custom upload providers (and feel free to <em>PR</em> them on GitHub) by creating a <a href="http://symfony.com/doc/current/components/dependency_injection/tags.html">tagged service</a>, with the <code>rest_upload.processor</code> tag</p>
+                    <pre class="prettyprint">&lt;parameters&gt;
+    &lt;parameter key="acme.my.processor.class"&gt;Acme\AcmeBundle\Upload\Processor\MyUploadProcessor&lt;/parameter&gt;
+&lt;/parameters&gt;
+
+&lt;services&gt;
+    &lt;service id="acme.my.processor" class="%acme.my.processor.class%"&gt;
+        &lt;argument type="service" id="doctrine.orm.entity_manager" /&gt;
+        <strong>&lt;tag name="rest_upload.processor" uploadType="acme" /&gt;</strong>
+    &lt;/service&gt;
+&lt;/services&gt;</pre>
+                    <p>Note the <code>uploadType</code> attribute that define the unique name of the upload way, set in the <code>uploadType</code> query parameters.</p>
+                    <p>Your <code>MyUploadProcessor</code> class should then implements the <a href="https://github.com/sroze/SRIORestUploadBundle/blob/master/Upload/Processor/ProcessorInterface.php"><code data-toggle="tooltip" title="SRIO\RestUploadBundle\Upload\Processor\ProcessorInterface">ProcessorInterface</code></a> or extends the <a href="https://github.com/sroze/SRIORestUploadBundle/blob/master/Upload/Processor/AbstractUploadProcessor.php"><code data-toggle="tooltip" title="SRIO\RestUploadBundle\Upload\Processor\AbstractUploadProcessor">AbstractUploadProcessor</code></a></p>
                 </div>
             </div>
         </div>
