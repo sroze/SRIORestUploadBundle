@@ -4,4 +4,6 @@
  */
 $(function(){
     prettyPrint();
+
+    $('[data-toggle="tooltip"]').tooltip();
 });

@@ -93,7 +93,7 @@
     }
 }</pre>
                             <p>Now tell composer to download the bundle by running the command:</p>
-                            <pre class="prettyprint">$ php composer.phar update srio/rest-upload-bundle</pre>
+                            <pre class="prettyprint">$ composer update srio/rest-upload-bundle</pre>
                         </li>
                     </ol>
                 </div>
@@ -113,6 +113,89 @@ public function registerBundles()
                     </ol>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <ol start="3">
+                        <li>
+                            <p><strong>Create your <code>ResumableUploadSession</code> entity</strong></p>
+                            <p>The entity will contains the resumable upload sessions and is required if you want the resumable way of upload to work. Note that if you don't want, you can skip that step.</p>
+                                    <pre class="prettyprint">&lt;?php
+namespace My\Bundle\Entity;
+
+use SRIO\RestUploadBundle\Entity\ResumableUploadSession as BaseResumableUploadSession;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="resumable_upload_session")
+ */
+class ResumableUploadSession extends BaseResumableUploadSession
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    public $id;
+}</pre>
+                            <p>Copy this entity in your bundle and update the schema.</p>
+                        </li>
+
+                        <li>
+                            <p><strong>Configure the <code>SRIORestUploadBundle</code></strong></p>
+                            <p>Copy and change to your needs the <a href="#configuration">configuration reference</a> at the end of your <code>app/config/config.yml</code> file.</p>
+                        </li>
+
+                        <li>
+                            <p><strong>Create a media form (or any name)</strong> which contains the fields you want to link to the binary.</p>
+                            <p>This form must be linked with an object that implements <a href="https://github.com/sroze/SRIORestUploadBundle/blob/master/Model/UploadableFileInterface.php"><code data-toggle="tooltip" title="SRIO\RestUploadBundle\Model\UploadableFileInterface">UploadableFileInterface</code></a>.</p>
+                            <pre class="prettyprint">&lt;?php
+namespace My\Bundle\Form\Type;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
+class MediaFormType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', 'text', array(
+                'required' => true,
+                'constraints' => array(new NotBlank())
+            ))
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'csrf_protection'   => false,
+            'data_class' => 'My\Bundle\Entity\Media'
+        ));
+    }
+
+    public function getName ()
+    {
+        return null;
+    }
+}</pre>
+                        </li>
+                        <li>
+                            <p><strong>Create your upload action in a controller</strong></p>
+                            <p>The basics of <code>SRIORestUploadBundle</code> is that everything is handled by the upload manager, a service named <code>srio_rest_upload.upload_manager</code>.</p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
             <div class="row" id="uploadWays">
                 <div class="col-lg-12">
                     <h1>Supported upload ways</h1>
@@ -128,14 +211,15 @@ public function registerBundles()
             <div class="row" id="configuration">
                 <div class="col-lg-12">
                     <h1>Configuration reference</h1>
-                    <pre class="prettyprint"># RestUploadBundle configuration
+                    <pre class="prettyprint"># app/config/config.yml
+# RestUploadBundle configuration
 srio_rest_upload:
     # The directory where files will be uploaded
     upload_dir: %kernel.root_dir%/../web/uploads
 
     # If you want to use the resumable upload way, you must set
     # the class name of your entity which store the upload sessions.
-    resumable_entity: Foo\BarBundle\FooBarBundle\Entity\ResumableUploadSession
+    resumable_entity: My\Bundle\Entity\ResumableUploadSession
 
     # A key map of the parameter and the effective parameter name in queries
     parameters:
