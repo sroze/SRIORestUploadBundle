@@ -192,6 +192,45 @@ class MediaFormType extends AbstractType
                         <li>
                             <p><strong>Create your upload action in a controller</strong></p>
                             <p>The basics of <code>SRIORestUploadBundle</code> is that everything is handled by the upload manager, a service named <code>srio_rest_upload.upload_manager</code>.</p>
+                            <pre class="prettyprint lang-php">// src/My/Bundle/MyBundle/Controller/YourController.php
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
+
+use My\Bundle\Form\Type\MediaFormType;
+
+class MyController extends Controller
+{
+    // ...
+    public function uploadMediaAction (Request $request)
+    {
+        $form = $this->createForm(new MediaFormType());
+        $uploadManager = $this->get('srio_rest_upload.upload_manager');
+        $result = $uploadManager->handleRequest($form, $request);
+
+        if ($result instanceof Response) {
+            return $result;
+        } else if ($form->isValid()) {
+            $media = $form->getData();
+
+            // Some media-specific operations like user association
+            // $media->setUser($this->getUser());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($media);
+            $em->flush();
+
+            return new JsonResponse($media);
+        } else {
+            return new NotAcceptableHttpException();
+        }
+    }
+}
+</pre>
+                        </li>
+                        <li>
+                            <p><strong>Let's upload files with available upload ways !</strong></p>
                         </li>
                     </ol>
                 </div>
@@ -201,9 +240,9 @@ class MediaFormType extends AbstractType
                     <h1>Supported upload ways</h1>
                     <p>The <code>SRIORestUploadBundle</code> supports three ways of file upload.</p>
                     <ol>
-                        <li><a href="#">The <strong>simple</strong> way</a>: send binary data to an URL and use query parameters to submit additional data.</li>
-                        <li><a href="#">The <strong>multipart</strong> way</a>: send both JSON and binary data using the <a href="http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html">multipart Content-Type</a>.</li>
-                        <li><a href="#">The <strong>resumable</strong> way</a>: start a resumable upload session by sending JSON data and then send file entirely or by chunks. It allow to restart a failed upload where it stops.</li>
+                        <li><a href="upload-simple.html">The <strong>simple</strong> way</a>: send binary data to an URL and use query parameters to submit additional data.</li>
+                        <li><a href="upload-multipart.html">The <strong>multipart</strong> way</a>: send both JSON and binary data using the <a href="http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html">multipart Content-Type</a>.</li>
+                        <li><a href="upload-resumable.html">The <strong>resumable</strong> way</a>: start a resumable upload session by sending JSON data and then send file entirely or by chunks. It allow to restart a failed upload where it stops.</li>
                     </ol>
                 </div>
             </div>
