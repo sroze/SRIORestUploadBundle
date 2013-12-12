@@ -227,12 +227,16 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
         $contentType = trim($contentParts[0]);
         $boundaryPart = trim($contentParts[1]);
 
-        $shouldStart = 'boundary="';
-        if (substr($boundaryPart, 0, strlen($shouldStart)) != $shouldStart || substr($boundaryPart, -1) != '"') {
+        $shouldStart = 'boundary=';
+        if (substr($boundaryPart, 0, strlen($shouldStart)) != $shouldStart) {
             throw new UploadProcessorException('Boundary is not set');
         }
 
-        $boundary = substr($boundaryPart, strlen($shouldStart), -1);
+        $boundary = substr($boundaryPart, strlen($shouldStart));
+        if (substr($boundary, 0, 1) == '"' && substr($boundary, -1) == '"') {
+            $boundary = substr($boundary, 1, -1);
+        }
+
         return array($contentType, $boundary);
     }
 }
