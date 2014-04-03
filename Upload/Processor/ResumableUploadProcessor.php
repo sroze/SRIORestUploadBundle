@@ -3,17 +3,13 @@ namespace SRIO\RestUploadBundle\Upload\Processor;
 
 use Doctrine\ORM\EntityManager;
 use SRIO\RestUploadBundle\Entity\ResumableUploadSession;
-use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Upload\File\FileWriter;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ResumableUploadProcessor extends AbstractUploadProcessor
 {

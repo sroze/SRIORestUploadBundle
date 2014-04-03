@@ -3,7 +3,6 @@ namespace SRIO\RestUploadBundle\Upload\Processor;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Upload\File\FileWriter;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

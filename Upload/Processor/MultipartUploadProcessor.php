@@ -4,7 +4,6 @@ namespace SRIO\RestUploadBundle\Upload\Processor;
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Upload\File\FileWriter;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -109,7 +108,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      */
     protected function checkHeaders (Request $request, array $headers = array())
     {
-        list($contentType, $boundary) = $this->parseContentTypeAndBoundary($request);
+        list($contentType) = $this->parseContentTypeAndBoundary($request);
 
         $expectedContentType = 'multipart/related';
         if ($contentType != $expectedContentType) {
