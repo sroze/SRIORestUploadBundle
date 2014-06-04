@@ -10,6 +10,7 @@
         <parameter key="srio_rest_upload.processor.simple.class">SRIO\RestUploadBundle\Upload\Processor\SimpleUploadProcessor</parameter>
         <parameter key="srio_rest_upload.processor.multipart.class">SRIO\RestUploadBundle\Upload\Processor\MultipartUploadProcessor</parameter>
         <parameter key="srio_rest_upload.processor.resumable.class">SRIO\RestUploadBundle\Upload\Processor\ResumableUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.form_data.class">SRIO\RestUploadBundle\Upload\Processor\FormDataUploadProcessor</parameter>
     </parameters>
 
     <services>
@@ -22,6 +23,9 @@
         </service>
         <service id="srio_rest_upload.processor.multipart" class="%srio_rest_upload.processor.multipart.class%">
             <tag name="rest_upload.processor" uploadType="multipart" />
+        </service>
+        <service id="srio_rest_upload.processor.form_data" class="%srio_rest_upload.processor.form_data.class%">
+            <tag name="rest_upload.processor" uploadType="formData" />
         </service>
         <service id="srio_rest_upload.processor.resumable" class="%srio_rest_upload.processor.resumable.class%">
             <argument type="service" id="doctrine.orm.entity_manager" />
