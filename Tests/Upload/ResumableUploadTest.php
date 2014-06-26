@@ -1,7 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResumableUploadTest extends AbstractUploadTestCase

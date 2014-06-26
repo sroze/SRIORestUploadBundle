@@ -1,8 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 class MultipartUploadTest extends AbstractUploadTestCase
 {
     public function testWithoutContent ()

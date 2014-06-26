@@ -1,11 +1,8 @@
 <?php
 namespace SRIO\RestUploadBundle\Tests\Upload\Processor;
 
-use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Tests\Upload\AbstractUploadTestCase;
-use SRIO\RestUploadBundle\Upload\Processor\ResumableUploadProcessor;
-use SRIO\RestUploadBundle\Upload\Request\RequestContentHandler;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use SRIO\RestUploadBundle\Request\RequestContentHandler;
 
 class RequestContentHandlerTest extends AbstractUploadTestCase
 {

@@ -1,9 +1,7 @@
 <?php
-namespace SRIO\RestUploadBundle\Tests\Upload\Processor;
+namespace SRIO\RestUploadBundle\Tests\Processor;
 
-use SRIO\RestUploadBundle\Exception\UploadProcessorException;
-use SRIO\RestUploadBundle\Upload\Processor\ResumableUploadProcessor;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use SRIO\RestUploadBundle\Processor\ResumableUploadProcessor;
 
 class ResumableUploadProcessorTest extends AbstractProcessorTestCase
 {
@@ -37,7 +35,7 @@ class ResumableUploadProcessorTest extends AbstractProcessorTestCase
      */
     protected function callParseContentRange ($string)
     {
-        $method = $this->getMethod('\SRIO\RestUploadBundle\Upload\Processor\ResumableUploadProcessor', 'parseContentRange');
+        $method = $this->getMethod('\SRIO\RestUploadBundle\Processor\ResumableUploadProcessor', 'parseContentRange');
         $em = $this->getMockEntityManager();
         $uploadProcessor = new ResumableUploadProcessor($em);
         return $method->invokeArgs($uploadProcessor, array($string));

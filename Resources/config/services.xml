@@ -7,10 +7,10 @@
     <parameters>
         <parameter key="srio_rest_upload.upload_manager.class">SRIO\RestUploadBundle\Upload\UploadManager</parameter>
 
-        <parameter key="srio_rest_upload.processor.simple.class">SRIO\RestUploadBundle\Upload\Processor\SimpleUploadProcessor</parameter>
-        <parameter key="srio_rest_upload.processor.multipart.class">SRIO\RestUploadBundle\Upload\Processor\MultipartUploadProcessor</parameter>
-        <parameter key="srio_rest_upload.processor.resumable.class">SRIO\RestUploadBundle\Upload\Processor\ResumableUploadProcessor</parameter>
-        <parameter key="srio_rest_upload.processor.form_data.class">SRIO\RestUploadBundle\Upload\Processor\FormDataUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.simple.class">SRIO\RestUploadBundle\Processor\SimpleUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.multipart.class">SRIO\RestUploadBundle\Processor\MultipartUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.resumable.class">SRIO\RestUploadBundle\Processor\ResumableUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.form_data.class">SRIO\RestUploadBundle\Processor\FormDataUploadProcessor</parameter>
     </parameters>
 
     <services>

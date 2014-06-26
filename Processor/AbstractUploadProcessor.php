@@ -1,11 +1,12 @@
 <?php
-namespace SRIO\RestUploadBundle\Upload\Processor;
+namespace SRIO\RestUploadBundle\Processor;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Model\UploadableFileInterface;
-use SRIO\RestUploadBundle\Upload\Request\RequestContentHandler;
-use SRIO\RestUploadBundle\Upload\Request\RequestContentHandlerInterface;
+use SRIO\RestUploadBundle\Request\RequestContentHandler;
+use SRIO\RestUploadBundle\Request\RequestContentHandlerInterface;
+
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;

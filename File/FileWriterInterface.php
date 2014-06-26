@@ -1,5 +1,5 @@
 <?php
-namespace SRIO\RestUploadBundle\Upload\File;
+namespace SRIO\RestUploadBundle\File;
 
 interface FileWriterInterface
 {

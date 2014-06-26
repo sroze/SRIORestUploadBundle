@@ -1,8 +1,7 @@
 <?php
-namespace SRIO\RestUploadBundle\Tests\Upload\Processor;
+namespace SRIO\RestUploadBundle\Tests\Processor;
 
 use SRIO\RestUploadBundle\Tests\Upload\AbstractUploadTestCase;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractProcessorTestCase extends AbstractUploadTestCase
 {

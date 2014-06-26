@@ -1,9 +1,7 @@
 <?php
-namespace SRIO\RestUploadBundle\Tests\Upload\Processor;
+namespace SRIO\RestUploadBundle\Tests\Processor;
 
-use SRIO\RestUploadBundle\Upload\Processor\MultipartUploadProcessor;
-use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use SRIO\RestUploadBundle\Processor\MultipartUploadProcessor;
 use Symfony\Component\HttpFoundation\HeaderBag;
 
 class MultipartUploadProcessorTest extends AbstractProcessorTestCase

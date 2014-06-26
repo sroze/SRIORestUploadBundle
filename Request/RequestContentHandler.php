@@ -1,5 +1,5 @@
 <?php
-namespace SRIO\RestUploadBundle\Upload\Request;
+namespace SRIO\RestUploadBundle\Request;
 
 use Symfony\Component\HttpFoundation\Request;
 

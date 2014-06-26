@@ -3,7 +3,8 @@ namespace SRIO\RestUploadBundle\Upload;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
-use SRIO\RestUploadBundle\Upload\Processor\ProcessorInterface;
+use SRIO\RestUploadBundle\Processor\ProcessorInterface;
+
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

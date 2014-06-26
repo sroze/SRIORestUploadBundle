@@ -1,8 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 class SimpleUploadTest extends AbstractUploadTestCase
 {
     public function testWithoutHeadersSimpleUpload()

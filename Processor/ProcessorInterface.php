@@ -1,5 +1,5 @@
 <?php
-namespace SRIO\RestUploadBundle\Upload\Processor;
+namespace SRIO\RestUploadBundle\Processor;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

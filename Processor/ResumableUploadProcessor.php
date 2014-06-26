@@ -1,10 +1,10 @@
 <?php
-namespace SRIO\RestUploadBundle\Upload\Processor;
+namespace SRIO\RestUploadBundle\Processor;
 
 use Doctrine\ORM\EntityManager;
 use SRIO\RestUploadBundle\Entity\ResumableUploadSession;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
-use SRIO\RestUploadBundle\Upload\File\FileWriter;
+use SRIO\RestUploadBundle\File\FileWriter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
