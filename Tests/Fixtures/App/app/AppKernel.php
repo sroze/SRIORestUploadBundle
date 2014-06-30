@@ -13,6 +13,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
 
+            new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new SRIO\RestUploadBundle\SRIORestUploadBundle(),
         );
     }

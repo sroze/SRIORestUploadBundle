@@ -1,15 +1,20 @@
 <?php
 namespace SRIO\RestUploadBundle\Processor;
 
-use Doctrine\ORM\EntityManager;
-use SRIO\RestUploadBundle\Entity\ResumableUploadSession;
-use SRIO\RestUploadBundle\Exception\UploadProcessorException;
-use SRIO\RestUploadBundle\File\FileWriter;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Gaufrette\File;
+use Gaufrette\StreamMode;
+use SRIO\RestUploadBundle\Storage\UploadedFile;
+use SRIO\RestUploadBundle\Upload\UploadContext;
+use SRIO\RestUploadBundle\Upload\UploadResult;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
+use Doctrine\ORM\EntityManager;
+
+use SRIO\RestUploadBundle\Entity\ResumableUploadSession;
+use SRIO\RestUploadBundle\Exception\UploadProcessorException;
+use SRIO\RestUploadBundle\Upload\StorageHandler;
 
 class ResumableUploadProcessor extends AbstractUploadProcessor
 {
@@ -24,42 +29,39 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
     protected $em;
 
     /**
+     * @var string
+     */
+    protected $resumableEntity;
+
+    /**
      * Constructor.
      *
+     * @param \SRIO\RestUploadBundle\Upload\StorageHandler $storageHandler
      * @param EntityManager $em
+     * @param string $resumableEntity
      */
-    public function __construct (EntityManager $em)
+    public function __construct (StorageHandler $storageHandler, EntityManager $em, $resumableEntity)
     {
+        parent::__construct($storageHandler);
+
         $this->em = $em;
+        $this->resumableEntity = $resumableEntity;
     }
 
     /**
-     * Handle upload.
-     *
-     * @param Request $request
-     * @param FormInterface $form
-     * @param array $config
-     * @return bool|void
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
+     * @return UploadResult
      */
-    public function handleUpload (Request $request, FormInterface $form, array $config)
+    public function handleRequest (Request $request)
     {
-        if (!array_key_exists('resumable_entity', $config)) {
+        if (empty($this->resumableEntity)) {
             throw new UploadProcessorException(sprintf(
                 'You must configure the "%s" option',
                 'resumable_entity'
             ));
         }
 
-        return parent::handleUpload($request, $form, $config);
-    }
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
-     * @param Request $request
-     */
-    public function handleRequest (Request $request)
-    {
         if ($request->query->has(self::PARAMETER_UPLOAD_ID)) {
             $this->checkHeaders($request, array('Content-Length'));
 
@@ -84,8 +86,8 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      * Handle a start session.
      *
      * @param Request $request
-     * @return bool|JsonResponse
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     * @return UploadResult
      */
     protected function handleStartSession (Request $request)
     {
@@ -100,39 +102,55 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
             ));
         }
 
-        // Submit form data
-        $data = json_decode($request->getContent(), true);
-        $formData = $this->createFormData($data);
-        $this->form->submit($formData);
-        if (!$this->form->isValid()) {
-            return false;
+        // Create the result object
+        $result = new UploadResult();
+        $result->setRequest($request);
+        $result->setConfig($this->config);
+        $result->setForm($this->form);
+
+        $formData = array();
+        if ($this->form != null) {
+            // Submit form data
+            $data = json_decode($request->getContent(), true);
+            $formData = $this->createFormData($data);
+            $this->form->submit($formData);
         }
 
-        // Form is valid, store it
-        $repository = $this->getRepository();
-        $className = $repository->getClassName();
+        if ($this->form == null || $this->form->isValid()) {
+            // Form is valid, store it
+            $repository = $this->getRepository();
+            $className = $repository->getClassName();
 
-        /** @var $resumableUpload ResumableUploadSession */
-        $resumableUpload = new $className;
+            // Create file from storage handler
+            $file = $this->storageHandler->store($result, '');
 
-        $resumableUpload->setData(serialize($formData));
-        $resumableUpload->setFilePath($this->createFilePath());
-        $resumableUpload->setSessionId($this->createSessionId());
-        $resumableUpload->setContentType($request->headers->get('X-Upload-Content-Type'));
-        $resumableUpload->setContentLength($request->headers->get('X-Upload-Content-Length'));
 
-        // Store resumable session
-        $this->em->persist($resumableUpload);
-        $this->em->flush($resumableUpload);
+            /** @var $resumableUpload ResumableUploadSession */
+            $resumableUpload = new $className;
 
-        // Compute redirect location path
-        $location = $request->getPathInfo().'?'.http_build_query(array_merge($request->query->all(), array(
-            self::PARAMETER_UPLOAD_ID => $resumableUpload->getSessionId()
-        )));
+            $resumableUpload->setData(serialize($formData));
+            $resumableUpload->setStorageName($file->getStorage()->getName());
+            $resumableUpload->setFilePath($file->getFile()->getName());
+            $resumableUpload->setSessionId($this->createSessionId());
+            $resumableUpload->setContentType($request->headers->get('X-Upload-Content-Type'));
+            $resumableUpload->setContentLength($request->headers->get('X-Upload-Content-Length'));
 
-        $response = new Response(null);
-        $response->headers->set('Location', $location);
-        return $response;
+            // Store resumable session
+            $this->em->persist($resumableUpload);
+            $this->em->flush($resumableUpload);
+
+            // Compute redirect location path
+            $location = $request->getPathInfo().'?'.http_build_query(array_merge($request->query->all(), array(
+                self::PARAMETER_UPLOAD_ID => $resumableUpload->getSessionId()
+            )));
+
+            $response = new Response(null);
+            $response->headers->set('Location', $location);
+
+            $result->setResponse($response);
+        }
+
+        return $result;
     }
 
     /**
@@ -140,9 +158,15 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      *
      * @param Request $request
      * @param ResumableUploadSession $uploadSession
+     * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     * @return UploadResult
      */
     protected function handleResume (Request $request, ResumableUploadSession $uploadSession)
     {
+        $filePath = $uploadSession->getFilePath();
+        $context = new UploadContext();
+        $context->setStorageName($uploadSession->getStorageName());
+
         $contentLength = $request->headers->get('Content-Length');
         if ($request->headers->has('Content-Range')) {
             $range = $this->parseContentRange($request->headers->get('Content-Range'));
@@ -155,13 +179,14 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
                 ));
             } else if ($range['start'] === '*') {
                 if ($contentLength == 0) {
-                    return $this->requestUploadStatus($uploadSession, $range);
+                    $file = $this->storageHandler->get($context, $filePath);
+                    return $this->requestUploadStatus($context, $uploadSession, $file, $range);
                 }
 
                 throw new UploadProcessorException('Content-Length must be 0 if asking upload status');
             }
 
-            $uploaded = file_exists($uploadSession->getFilePath()) ? filesize($uploadSession->getFilePath()) : 0;
+            $uploaded = $this->storageHandler->size($context, $filePath);
             if ($range['start'] != $uploaded) {
                 throw new UploadProcessorException(sprintf(
                     'Unable to start at %d while uploaded is %d',
@@ -179,20 +204,33 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
 
         // Handle upload from
         $handler = $this->getRequestContentHandler($request);
-        $writer = new FileWriter($uploadSession->getFilePath());
+        $writer = $this->storageHandler->getStream($context, $filePath);
+        if ($writer->open(new StreamMode('c')) !== true) {
+            throw new UploadProcessorException('Unable to open stream');
+        }
+
         $writer->seek($range['start']);
         $wrote = 0;
         while (!$handler->eof()) {
-            $wrote += $writer->write($handler->gets());
+            if (($bytes = $writer->write($handler->gets())) !== false) {
+                $wrote += $bytes;
+            } else {
+                throw new UploadProcessorException('Unable to wrote to file');
+            }
         }
+
         $writer->close();
+
+        // Get file in context and its size
+        $file = $this->storageHandler->get($context, $filePath);
+        $size = $file->getSize();
 
         // If upload is completed, create the upload file, else
         // return like the request upload status
-        if ($writer->size() < $uploadSession->getContentLength()) {
-            return $this->requestUploadStatus($uploadSession, $range);
-        } else if ($writer->size() == $uploadSession->getContentLength()) {
-            return $this->handleCompletedUpload($uploadSession);
+        if ($size < $uploadSession->getContentLength()) {
+            return $this->requestUploadStatus($context, $uploadSession, $file, $range);
+        } else if ($size == $uploadSession->getContentLength()) {
+            return $this->handleCompletedUpload($context, $uploadSession, $file);
         } else {
             throw new UploadProcessorException('Wrote file size is greater that expected Content-Length');
         }
@@ -201,51 +239,63 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
     /**
      * Handle a completed upload.
      *
+     * @param \SRIO\RestUploadBundle\Upload\UploadContext $context
      * @param ResumableUploadSession $uploadSession
+     * @param \Gaufrette\File $file
+     * @return UploadResult
      */
-    protected function handleCompletedUpload (ResumableUploadSession $uploadSession)
+    protected function handleCompletedUpload (UploadContext $context, ResumableUploadSession $uploadSession, File $file)
     {
-        // Submit the form data
-        $formData = unserialize($uploadSession->getData());
-        $this->form->submit($formData);
-        if (!$this->form->isValid()) {
-            return false;
+        $result = new UploadResult();
+        $result->setForm($this->form);
+
+        if ($this->form != null) {
+            // Submit the form data
+            $formData = unserialize($uploadSession->getData());
+            $this->form->submit($formData);
         }
 
-        // Create the uploaded file
-        $uploadedFile = new UploadedFile(
-            $uploadSession->getFilePath(),
-            null,
-            $uploadSession->getContentType(),
-            $uploadSession->getContentLength()
-        );
+        if ($this->form == null || $this->form->isValid()) {
+            // Create the uploaded file
+            $uploadedFile = new UploadedFile(
+                $this->storageHandler->getStorage($context),
+                $file
+            );
 
-        $this->setUploadedFile($uploadedFile);
+            $result->setFile($uploadedFile);
+        }
 
-        return true;
+        return $result;
     }
 
     /**
      * Return the upload status.
      *
+     * @param \SRIO\RestUploadBundle\Upload\UploadContext $context
      * @param ResumableUploadSession $uploadSession
+     * @param \Gaufrette\File $file
      * @param array $range
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return UploadResult
      */
-    protected function requestUploadStatus (ResumableUploadSession $uploadSession, array $range)
+    protected function requestUploadStatus (UploadContext $context, ResumableUploadSession $uploadSession, File $file, array $range)
     {
-        $filePath = $uploadSession->getFilePath();
-        if (!file_exists($filePath)) {
+        if (!$file->exists()) {
             $length = 0;
         } else {
-            clearstatcache(true, $filePath);
-            $length = filesize($filePath);
+            $length = $file->getSize();
         }
 
         $response = new Response(null, $length == $range['total'] ? 201 : 308);
+
+        if ($length < 1) {
+            $length = 1;
+        }
+
         $response->headers->set('Range', '0-'.($length - 1));
 
-        return $response;
+        $result = new UploadResult();
+        $result->setResponse($response);
+        return $result;
     }
 
     /**
@@ -257,6 +307,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      * - `total` Total number of bytes
      *
      * @param string $contentRange
+     * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @return array
      */
     protected function parseContentRange ($contentRange)
@@ -297,7 +348,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      */
     protected function getRepository ()
     {
-        return $this->em->getRepository($this->config['resumable_entity']);
+        return $this->em->getRepository($this->resumableEntity);
     }
 
     /**

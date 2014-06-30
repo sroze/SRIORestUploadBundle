@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="srio_rest_upload.upload_handler.class">SRIO\RestUploadBundle\Upload\UploadHandler</parameter>
+        <parameter key="srio_rest_upload.storage_handler.class">SRIO\RestUploadBundle\Upload\StorageHandler</parameter>
+        <parameter key="srio_rest_upload.storage_voter.class">SRIO\RestUploadBundle\Voter\StorageVoter</parameter>
+    </parameters>
+
+    <services>
+        <service id="srio_rest_upload.upload_handler" class="%srio_rest_upload.upload_handler.class%">
+            <argument>%srio_rest_upload.upload_type_parameter%</argument>
+        </service>
+        <service id="srio_rest_upload.storage_handler" class="%srio_rest_upload.storage_handler.class%">
+            <argument type="service" id="srio_rest_upload.storage_voter" />
+        </service>
+        <service id="srio_rest_upload.storage_voter" class="%srio_rest_upload.storage_voter.class%" />
+    </services>
+</container>

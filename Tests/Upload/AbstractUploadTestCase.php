@@ -15,9 +15,6 @@ abstract class AbstractUploadTestCase extends WebTestCase
     {
         $response = $client->getResponse();
         $this->assertEquals(400, $response->getStatusCode());
-        $jsonContent = json_decode($response->getContent(), true);
-        $this->assertNotEmpty($jsonContent);
-        $this->assertTrue(array_key_exists('errors', $jsonContent));
     }
 
     /**
@@ -39,6 +36,18 @@ abstract class AbstractUploadTestCase extends WebTestCase
         }
 
         return file_get_contents($filePath);
+    }
+
+    /**
+     * Get uploaded file path.
+     *
+     * @param Client $client
+     * @param $name
+     * @return string
+     */
+    protected function getUploadedFilePath (Client $client)
+    {
+        return $client->getContainer()->getParameter('kernel.root_dir').'/../web/uploads';
     }
 
     /**

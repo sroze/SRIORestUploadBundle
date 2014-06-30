@@ -2,7 +2,7 @@
 namespace SRIO\RestUploadBundle\Tests\Fixtures\Entity;
 
 use SRIO\RestUploadBundle\Model\UploadableFileInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use SRIO\RestUploadBundle\Storage\UploadedFile;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -53,11 +53,15 @@ class Media implements UploadableFileInterface
      * Set uploaded file.
      *
      */
-    public function setFile (UploadedFile $file)
+    public function setFile (UploadedFile $uploaded)
     {
-        $this->mimeType = $file->getClientMimeType();
-        $this->path = $file->getPathname();
-        $this->size = $file->getClientSize();
-        $this->originalName = $file->getClientOriginalName();
+        $this->path = $uploaded->getFile()->getName();
+        $this->size = $uploaded->getFile()->getSize();
+
+        // TODO Add mimetype on `UploadedFile`
+        $this->mimeType = $uploaded->getStorage()->getFilesystem()->mimeType($this->path);
+
+        // TODO Add original name
+        $this->originalName = $uploaded->getFile()->getName();
     }
 }

@@ -9,11 +9,11 @@ class ProcessorCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition('srio_rest_upload.upload_manager')) {
+        if (false === $container->hasDefinition('srio_rest_upload.upload_handler')) {
             return;
         }
 
-        $uploadManagerDefinition = $container->getDefinition('srio_rest_upload.upload_manager');
+        $uploadHandlerDefinition = $container->getDefinition('srio_rest_upload.upload_handler');
         $processorDefinitions = $container->findTaggedServiceIds('rest_upload.processor');
 
         foreach ($processorDefinitions as $id => $tagAttributes) {
@@ -22,7 +22,7 @@ class ProcessorCompilerPass implements CompilerPassInterface
                     throw new \LogicException('A "rest_upload.processor" tag must have "uploadType" attribute');
                 }
 
-                $uploadManagerDefinition->addMethodCall('addProcessor', array($attributes['uploadType'], new Reference($id)));
+                $uploadHandlerDefinition->addMethodCall('addProcessor', array($attributes['uploadType'], new Reference($id)));
             }
         }
     }

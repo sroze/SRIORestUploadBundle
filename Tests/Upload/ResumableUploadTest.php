@@ -1,6 +1,7 @@
 <?php
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResumableUploadTest extends AbstractUploadTestCase
@@ -17,8 +18,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
             'CONTENT_LENGTH' => strlen($content)
         ), $content);
 
-        $response = $client->getResponse();
-        $this->assertSuccessful($response, $content);
+        $this->assertSuccessful($client, $content);
     }
 
     public function testChunkedUpload ()
@@ -50,13 +50,12 @@ class ResumableUploadTest extends AbstractUploadTestCase
                 ));
 
                 $response = $client->getResponse();
-                echo $response->getContent();
                 $this->assertEquals(308, $response->getStatusCode());
                 $this->assertEquals('0-'.$end, $response->headers->get('Range'));
             }
         }
 
-        $this->assertSuccessful($response, $content);
+        $this->assertSuccessful($client, $content);
     }
 
     protected function startSession ()
@@ -81,18 +80,21 @@ class ResumableUploadTest extends AbstractUploadTestCase
         return $client;
     }
 
-    protected function assertSuccessful (Response $response, $content)
+    protected function assertSuccessful (Client $client, $content)
     {
+        $response = $client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
         $jsonContent = json_decode($response->getContent(), true);
         $this->assertNotEmpty($jsonContent);
-        $this->assertFalse(array_key_exists('errors', $jsonContent));
         $this->assertTrue(array_key_exists('path', $jsonContent));
         $this->assertTrue(array_key_exists('size', $jsonContent));
         $this->assertTrue(array_key_exists('name', $jsonContent));
         $this->assertEquals('test', $jsonContent['name']);
         $this->assertEquals(strlen($content), $jsonContent['size']);
-        $this->assertTrue(file_exists($jsonContent['path']));
-        $this->assertEquals($content, file_get_contents($jsonContent['path']));
+
+        $filePath = $this->getUploadedFilePath($client).$jsonContent['path'];
+        $this->assertTrue(file_exists($filePath));
+        $this->assertEquals($content, file_get_contents($filePath));
         $this->assertTrue(array_key_exists('id', $jsonContent));
         $this->assertNotEmpty($jsonContent['id']);
     }

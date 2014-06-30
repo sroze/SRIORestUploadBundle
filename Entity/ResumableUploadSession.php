@@ -26,6 +26,13 @@ class ResumableUploadSession
     protected $filePath;
 
     /**
+     * Name of storage used.
+     *
+     * @var string
+     */
+    protected $storageName;
+
+    /**
      * The form data.
      *
      * @var string
@@ -124,5 +131,21 @@ class ResumableUploadSession
     public function getContentType()
     {
         return $this->contentType;
+    }
+
+    /**
+     * @param string $storageName
+     */
+    public function setStorageName($storageName)
+    {
+        $this->storageName = $storageName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStorageName()
+    {
+        return $this->storageName;
     }
 }

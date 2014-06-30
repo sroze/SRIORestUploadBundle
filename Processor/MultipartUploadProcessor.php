@@ -1,59 +1,48 @@
 <?php
 namespace SRIO\RestUploadBundle\Processor;
 
-use SRIO\RestUploadBundle\Exception\UploadException;
-use SRIO\RestUploadBundle\Exception\UploadProcessorException;
-use SRIO\RestUploadBundle\File\FileWriter;
-
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+
+use SRIO\RestUploadBundle\Exception\UploadProcessorException;
+use SRIO\RestUploadBundle\Upload\UploadResult;
 
 class MultipartUploadProcessor extends AbstractUploadProcessor
 {
     /**
+     * {@inheritDoc}
+     *
      * @param Request $request
      * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
+     * @return \SRIO\RestUploadBundle\Upload\UploadResult
      */
     public function handleRequest (Request $request)
     {
         // Check that needed headers exists
         $this->checkHeaders($request);
 
-        // Get formData
-        $formData = $this->getFormData($request);
-        $formData = $this->createFormData($formData);
+        // Create the response
+        $response = new UploadResult();
+        $response->setRequest($request);
+        $response->setConfig($this->config);
+        $response->setForm($this->form);
 
         // Submit form data
-        $this->form->submit($formData);
-        if (!$this->form->isValid()) {
-            return false;
+        if ($this->form != null) {
+            // Get formData
+            $formData = $this->getFormData($request);
+            $formData = $this->createFormData($formData);
+
+            $this->form->submit($formData);
         }
 
-        // Handle the file content
-        $filePath = $this->createFilePath();
-        $writer = new FileWriter($filePath);
-        list($contentType, $content) = $this->getContent($request);
+        if ($this->form === null || $this->form->isValid()) {
+            list($contentType, $content) = $this->getContent($request);
 
-        try {
-            $contentLength = $writer->write($content);
-            $writer->close();
-
-            // Create the uploaded file
-            $uploadedFile = new UploadedFile(
-                $filePath,
-                null,
-                $contentType,
-                $contentLength
-            );
-
-            $this->setUploadedFile($uploadedFile);
-
-            return true;
-        } catch (UploadException $e) {
-            $writer->unlink();
-
-            throw $e;
+            $file = $this->storageHandler->store($response, $content);
+            $response->setFile($file);
         }
+
+        return $response;
     }
 
     /**
@@ -126,9 +115,8 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      * Get a part of request.
      *
      * @param Request $request
-     * @param $part
-     * @return array
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     * @return array
      */
     protected function getPart (Request $request)
     {

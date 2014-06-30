@@ -7,10 +7,10 @@ use SRIO\RestUploadBundle\Model\UploadableFileInterface;
 use SRIO\RestUploadBundle\Request\RequestContentHandler;
 use SRIO\RestUploadBundle\Request\RequestContentHandlerInterface;
 
+use SRIO\RestUploadBundle\Upload\StorageHandler;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractUploadProcessor implements ProcessorInterface
 {
@@ -30,6 +30,21 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     protected $contentHandler = null;
 
     /**
+     * @var \SRIO\RestUploadBundle\Upload\StorageHandler
+     */
+    protected $storageHandler;
+
+    /**
+     * Constructor.
+     *
+     * @param StorageHandler $storageHandler
+     */
+    public function __construct (StorageHandler $storageHandler)
+    {
+        $this->storageHandler = $storageHandler;
+    }
+
+    /**
      * Constructor.
      *
      * @param Request $request
@@ -37,7 +52,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      * @param array $config
      * @return boolean
      */
-    public function handleUpload (Request $request, FormInterface $form, array $config)
+    public function handleUpload (Request $request, FormInterface $form = null, array $config = array())
     {
         $this->form = $form;
         $this->config = $config;
@@ -52,7 +67,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      * to the client or will be caught by controller.
      *
      * @param Request $request
-     * @return boolean|Response
+     * @return \SRIO\RestUploadBundle\Upload\UploadResult
      */
     abstract public function handleRequest (Request $request);
 
@@ -122,6 +137,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      *
      * @param UploadedFile $file
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     * @deprecated
      */
     protected function setUploadedFile (UploadedFile $file)
     {
@@ -135,19 +151,5 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
                 'SRIO\RestUploadBundle\Model\UploadableFileInterface'
             ));
         }
-    }
-
-    /**
-     * Create a unique non existing file path.
-     *
-     * @return string
-     */
-    protected function createFilePath ()
-    {
-        do {
-            $filePath = $this->config['upload_dir'].'/'.uniqid();
-        } while (file_exists($filePath));
-
-        return $filePath;
     }
 }

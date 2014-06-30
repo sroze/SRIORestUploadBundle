@@ -13,8 +13,7 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
         $data = array('test' => 'OK');
         $jsonData = json_encode($data);
 
-        $em = $this->getMockEntityManager();
-        $multipartUploadProcessor = new MultipartUploadProcessor($em);
+        $multipartUploadProcessor = $this->getProcessor();
         $request = $this->createMultipartRequest($jsonData, $image);
 
         $partOne = $this->callMethod($multipartUploadProcessor, 'getPart', array($request, 1));
@@ -45,8 +44,7 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
         file_put_contents($tempFile, $content);
         $resource = fopen($tempFile, 'r');
 
-        $em = $this->getMockEntityManager();
-        $multipartUploadProcessor = new MultipartUploadProcessor($em);
+        $multipartUploadProcessor = $this->getProcessor();
         $request = $this->createMultipartRequestWithContent($boundary, $resource);
 
         $partOne = $this->callMethod($multipartUploadProcessor, 'getPart', array($request, 1));
@@ -92,5 +90,26 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
         ));
 
         return $request;
+    }
+
+    protected function getProcessor ()
+    {
+        $voter = $this->getMock(
+            'SRIO\RestUploadBundle\Voter\StorageVoter'
+        );
+
+        $storageHandler = $this->getMock(
+            '\SRIO\RestUploadBundle\Upload\StorageHandler',
+            array(),
+            array($voter)
+        );
+
+        $processor = $this->getMock(
+            '\SRIO\RestUploadBundle\Processor\MultipartUploadProcessor',
+            array(),
+            array($storageHandler)
+        );
+
+        return $processor;
     }
 } 

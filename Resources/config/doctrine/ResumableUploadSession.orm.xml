@@ -9,6 +9,7 @@
         <field name="contentType" column="contentType" type="string" length="255" />
         <field name="contentLength" column="contentLength" type="integer" />
 
+        <field name="storageName" column="storageName" type="text" />
         <field name="filePath" column="filePath" type="text" />
         <field name="data" column="data" type="text" />
     </mapped-superclass>

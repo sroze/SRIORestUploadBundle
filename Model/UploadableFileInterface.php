@@ -1,7 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Model;
-
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use SRIO\RestUploadBundle\Storage\UploadedFile;
 
 /**
  * A file object that will be uploaded with RestUploadBundle must implements

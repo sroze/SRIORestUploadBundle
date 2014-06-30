@@ -43,7 +43,21 @@ web_profiler:
     toolbar: false
     intercept_redirects: false
 
+# Gaufrette configuration
+knp_gaufrette:
+    adapters:
+        test:
+            local:
+                directory: %kernel.root_dir%/../web/uploads
+    filesystems:
+        test:
+            adapter: test
+
 # RestUploadBundle configuration
 srio_rest_upload:
-    upload_dir: %kernel.root_dir%/../web/uploads
-    resumable_entity: SRIO\RestUploadBundle\Tests\Fixtures\Entity\ResumableUploadSession
+    storages:
+        default:
+            filesystem: gaufrette.test_filesystem
+
+    upload_type_parameter: uploadType
+    resumable_entity_class: SRIO\RestUploadBundle\Tests\Fixtures\Entity\ResumableUploadSession

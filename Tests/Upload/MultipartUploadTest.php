@@ -96,8 +96,10 @@ class MultipartUploadTest extends AbstractUploadTestCase
         $this->assertTrue(array_key_exists('name', $jsonContent));
         $this->assertEquals('test', $jsonContent['name']);
         $this->assertEquals(strlen($image), $jsonContent['size']);
-        $this->assertTrue(file_exists($jsonContent['path']));
-        $this->assertEquals($image, file_get_contents($jsonContent['path']));
+
+        $filePath = $this->getUploadedFilePath($client).$jsonContent['path'];
+        $this->assertTrue(file_exists($filePath));
+        $this->assertEquals($image, file_get_contents($filePath));
         $this->assertTrue(array_key_exists('id', $jsonContent));
         $this->assertNotEmpty($jsonContent['id']);
     }

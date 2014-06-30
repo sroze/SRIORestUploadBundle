@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="srio_rest_upload.processor.class">SRIO\RestUploadBundle\Processor\AbstractUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.simple.class">SRIO\RestUploadBundle\Processor\SimpleUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.multipart.class">SRIO\RestUploadBundle\Processor\MultipartUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.resumable.class">SRIO\RestUploadBundle\Processor\ResumableUploadProcessor</parameter>
+        <parameter key="srio_rest_upload.processor.form_data.class">SRIO\RestUploadBundle\Processor\FormDataUploadProcessor</parameter>
+    </parameters>
+
+    <services>
+        <service id="srio_rest_upload.processor" abstract="true" class="%srio_rest_upload.processor.class%">
+            <argument type="service" id="srio_rest_upload.storage_handler" />
+        </service>
+        <service id="srio_rest_upload.processor.simple" class="%srio_rest_upload.processor.simple.class%"
+            parent="srio_rest_upload.processor">
+            <tag name="rest_upload.processor" uploadType="simple" />
+        </service>
+        <service id="srio_rest_upload.processor.multipart" class="%srio_rest_upload.processor.multipart.class%"
+             parent="srio_rest_upload.processor">
+            <tag name="rest_upload.processor" uploadType="multipart" />
+        </service>
+        <service id="srio_rest_upload.processor.form_data" class="%srio_rest_upload.processor.form_data.class%"
+             parent="srio_rest_upload.processor">
+            <tag name="rest_upload.processor" uploadType="formData" />
+        </service>
+        <service id="srio_rest_upload.processor.resumable" class="%srio_rest_upload.processor.resumable.class%"
+             parent="srio_rest_upload.processor">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%srio_rest_upload.resumable_entity_class%</argument>
+            <tag name="rest_upload.processor" uploadType="resumable" />
+        </service>
+    </services>
+</container>

@@ -3,7 +3,6 @@ namespace SRIO\RestUploadBundle\Processor;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Upload processor interface.
@@ -17,7 +16,8 @@ interface ProcessorInterface
      * @param Request $request
      * @param FormInterface $form
      * @param array $options
-     * @return boolean|Response
+     *
+     * @return \SRIO\RestUploadBundle\Upload\UploadResult
      */
-    public function handleUpload (Request $request, FormInterface $form, array $options);
+    public function handleUpload (Request $request, FormInterface $form = null, array $options = array());
 }
