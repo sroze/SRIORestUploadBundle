@@ -15,8 +15,8 @@
         "php": ">=5.3.3",
         "symfony/symfony": ">=2.3.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        "knplabs/knp-gaufrette-bundle": "dev-master",
-        "knplabs/gaufrette": "0.2.*@dev"
+        "knplabs/knp-gaufrette-bundle": ">=0.1.7",
+        "knplabs/gaufrette": ">=0.1.7"
     },
     "require-dev": {
         "sensio/framework-extra-bundle": ">=2.3.0",

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6b7c5ff17a07959aa83900a9cfdc6ffd",
+    "hash": "86368d95905d81e6e711c580ffd0ef6a",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -464,7 +464,7 @@
         },
         {
             "name": "knplabs/gaufrette",
-            "version": "dev-master",
+            "version": "v0.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/Gaufrette.git",
@@ -546,21 +546,21 @@
         },
         {
             "name": "knplabs/knp-gaufrette-bundle",
-            "version": "dev-master",
+            "version": "v0.1.7",
             "target-dir": "Knp/Bundle/GaufretteBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpGaufretteBundle.git",
-                "reference": "ce0e00c554a6ef80a56b05e2e4c5822e3905bc3d"
+                "reference": "f33008584345452c3122bb4eaac0ded1d6084c51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpGaufretteBundle/zipball/ce0e00c554a6ef80a56b05e2e4c5822e3905bc3d",
-                "reference": "ce0e00c554a6ef80a56b05e2e4c5822e3905bc3d",
+                "url": "https://api.github.com/repos/KnpLabs/KnpGaufretteBundle/zipball/f33008584345452c3122bb4eaac0ded1d6084c51",
+                "reference": "f33008584345452c3122bb4eaac0ded1d6084c51",
                 "shasum": ""
             },
             "require": {
-                "knplabs/gaufrette": "0.2.*@dev",
+                "knplabs/gaufrette": "~0.1.7",
                 "symfony/framework-bundle": "2.*"
             },
             "require-dev": {
@@ -602,7 +602,7 @@
                 "filesystem",
                 "media"
             ],
-            "time": "2014-06-03 08:10:53"
+            "time": "2014-03-24 22:15:03"
         },
         {
             "name": "psr/log",
@@ -1548,10 +1548,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "knplabs/knp-gaufrette-bundle": 20,
-        "knplabs/gaufrette": 20
-    },
+    "stability-flags": [],
     "platform": {
         "php": ">=5.3.3"
     },
