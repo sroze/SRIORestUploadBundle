@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->scalarNode('default_storage')->defaultNull()->end()
                 ->scalarNode('resumable_entity_class')->end()
                 ->scalarNode('upload_type_parameter')
                     ->defaultValue('uploadType')

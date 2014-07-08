@@ -27,6 +27,7 @@ class SRIORestUploadExtension extends Extension
 
         $container->setParameter('srio_rest_upload.upload_type_parameter', $config['upload_type_parameter']);
         $container->setParameter('srio_rest_upload.resumable_entity_class', $config['resumable_entity_class']);
+        $container->setParameter('srio_rest_upload.default_storage', $config['default_storage']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('processors.xml');

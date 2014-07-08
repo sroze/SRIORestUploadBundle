@@ -18,6 +18,21 @@ class StorageVoter
     protected $storages = array();
 
     /**
+     * @var string
+     */
+    protected $defaultStorage;
+
+    /**
+     * Constructor.
+     *
+     * @param $defaultStorage
+     */
+    public function __construct ($defaultStorage = null)
+    {
+        $this->defaultStorage = $defaultStorage;
+    }
+
+    /**
      * Add a storage.
      *
      * @param FileStorage $storage
@@ -49,7 +64,8 @@ class StorageVoter
             throw new UploadException('No storage found');
         }
 
-        if (($storageName = $context->getStorageName()) !== null) {
+        if (($storageName = $context->getStorageName()) !== null
+            || (($storageName = $this->defaultStorage) !== null)) {
             if (!array_key_exists($storageName, $this->storages)) {
                 throw new \RuntimeException(sprintf(
                     'Storage with name %s do not exists',
