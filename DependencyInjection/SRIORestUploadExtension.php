@@ -4,6 +4,7 @@ namespace SRIO\RestUploadBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
@@ -28,6 +29,8 @@ class SRIORestUploadExtension extends Extension
         $container->setParameter('srio_rest_upload.upload_type_parameter', $config['upload_type_parameter']);
         $container->setParameter('srio_rest_upload.resumable_entity_class', $config['resumable_entity_class']);
         $container->setParameter('srio_rest_upload.default_storage', $config['default_storage']);
+
+        $this->createStorageVoter($container, $config['storage_voter']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('processors.xml');
@@ -71,5 +74,17 @@ class SRIORestUploadExtension extends Extension
         $factory->create($containerBuilder, $id, $config);
 
         return $id;
+    }
+
+    /**
+     * Create the storage voter.
+     *
+     * @param ContainerBuilder $builder
+     * @param $service
+     */
+    private function createStorageVoter (ContainerBuilder $builder, $service)
+    {
+        $definition = new DefinitionDecorator($service);
+        $builder->setDefinition('srio_rest_upload.storage_voter', $definition);
     }
 }

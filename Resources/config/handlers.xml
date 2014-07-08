@@ -6,7 +6,7 @@
     <parameters>
         <parameter key="srio_rest_upload.upload_handler.class">SRIO\RestUploadBundle\Upload\UploadHandler</parameter>
         <parameter key="srio_rest_upload.storage_handler.class">SRIO\RestUploadBundle\Upload\StorageHandler</parameter>
-        <parameter key="srio_rest_upload.storage_voter.class">SRIO\RestUploadBundle\Voter\StorageVoter</parameter>
+        <parameter key="srio_rest_upload.storage_voter.default.class">SRIO\RestUploadBundle\Voter\StorageVoter</parameter>
     </parameters>
 
     <services>
@@ -16,7 +16,8 @@
         <service id="srio_rest_upload.storage_handler" class="%srio_rest_upload.storage_handler.class%">
             <argument type="service" id="srio_rest_upload.storage_voter" />
         </service>
-        <service id="srio_rest_upload.storage_voter" class="%srio_rest_upload.storage_voter.class%">
+
+        <service id="srio_rest_upload.storage_voter.default" class="%srio_rest_upload.storage_voter.default.class%">
             <argument>%srio_rest_upload.default_storage%</argument>
         </service>
     </services>
