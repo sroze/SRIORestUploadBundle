@@ -30,12 +30,12 @@ class StorageHandler
     /**
      * @param UploadContext $context
      * @param $contents
-     * @throws \SRIO\RestUploadBundle\Exception\UploadException
+     * @param array $metadataMap
      * @return UploadedFile
      */
-    public function store (UploadContext $context, $contents)
+    public function store (UploadContext $context, $contents, array $metadataMap = array())
     {
-        return $this->getStorage($context)->store($context, $contents);
+        return $this->getStorage($context)->store($context, $contents, $metadataMap);
     }
 
     /**

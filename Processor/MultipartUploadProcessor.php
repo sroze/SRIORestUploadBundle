@@ -1,6 +1,7 @@
 <?php
 namespace SRIO\RestUploadBundle\Processor;
 
+use SRIO\RestUploadBundle\Storage\FileStorage;
 use Symfony\Component\HttpFoundation\Request;
 
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
@@ -21,10 +22,10 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
         $this->checkHeaders($request);
 
         // Create the response
-        $response = new UploadResult();
-        $response->setRequest($request);
-        $response->setConfig($this->config);
-        $response->setForm($this->form);
+        $result = new UploadResult();
+        $result->setRequest($request);
+        $result->setConfig($this->config);
+        $result->setForm($this->form);
 
         // Submit form data
         if ($this->form != null) {
@@ -38,11 +39,14 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
         if ($this->form === null || $this->form->isValid()) {
             list($contentType, $content) = $this->getContent($request);
 
-            $file = $this->storageHandler->store($response, $content);
-            $response->setFile($file);
+            $file = $this->storageHandler->store($result, $content, array(
+                FileStorage::METADATA_CONTENT_TYPE => $contentType
+            ));
+
+            $result->setFile($file);
         }
 
-        return $response;
+        return $result;
     }
 
     /**

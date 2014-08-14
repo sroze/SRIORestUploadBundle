@@ -3,6 +3,7 @@ namespace SRIO\RestUploadBundle\Processor;
 
 use Gaufrette\File;
 use Gaufrette\StreamMode;
+use SRIO\RestUploadBundle\Storage\FileStorage;
 use SRIO\RestUploadBundle\Storage\UploadedFile;
 use SRIO\RestUploadBundle\Upload\UploadContext;
 use SRIO\RestUploadBundle\Upload\UploadResult;
@@ -122,8 +123,9 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
             $className = $repository->getClassName();
 
             // Create file from storage handler
-            $file = $this->storageHandler->store($result, '');
-
+            $file = $this->storageHandler->store($result, '', array(
+                FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('X-Upload-Content-Type')
+            ));
 
             /** @var $resumableUpload ResumableUploadSession */
             $resumableUpload = new $className;

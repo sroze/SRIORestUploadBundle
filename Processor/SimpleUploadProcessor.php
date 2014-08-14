@@ -1,6 +1,7 @@
 <?php
 namespace SRIO\RestUploadBundle\Processor;
 
+use SRIO\RestUploadBundle\Storage\FileStorage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,7 +33,10 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
 
         if ($this->form == null || $this->form->isValid()) {
             $content = $request->getContent();
-            $file = $this->storageHandler->store($result, $content);
+            $file = $this->storageHandler->store($result, $content, array(
+                FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('Content-Type')
+            ));
+
             $result->setFile($file);
         }
 

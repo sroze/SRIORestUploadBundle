@@ -1,6 +1,7 @@
 <?php
 namespace SRIO\RestUploadBundle\Storage;
 
+use Gaufrette\Adapter\MetadataSupporter;
 use Gaufrette\File;
 use Gaufrette\Filesystem;
 
@@ -10,6 +11,8 @@ use SRIO\RestUploadBundle\Upload\UploadContext;
 
 class FileStorage
 {
+    const METADATA_CONTENT_TYPE = 'contentType';
+
     /**
      * @var string
      */
@@ -51,19 +54,44 @@ class FileStorage
      *
      * @param UploadContext $context
      * @param $content
-     * @throws \RuntimeException
+     * @param array $metadataMap
      * @return UploadedFile
      */
-    public function store (UploadContext $context, $content)
+    public function store (UploadContext $context, $content, array $metadataMap = array())
     {
         $name = $this->namingStrategy->getName($context);
         $directory = $this->storageStrategy->getDirectory($context, $name);
         $path = $directory.'/'.$name;
 
+        $adapter = $this->filesystem->getAdapter();
+        if ($adapter instanceof MetadataSupporter) {
+            $adapter->setMetadata($path, $this->resolveMetadataMap($context, $metadataMap));
+        }
         $this->filesystem->write($path, $content);
 
         $file = $this->filesystem->get($path);
         return new UploadedFile($this, $file);
+    }
+
+    /**
+     * Resolve the metadata map.
+     *
+     * @param UploadContext $context
+     * @param array $metadataMap
+     * @return array
+     */
+    protected function resolveMetadataMap(UploadContext $context, array $metadataMap)
+    {
+        $allowedMetadataKeys = array(self::METADATA_CONTENT_TYPE);
+        $map = array();
+
+        foreach ($allowedMetadataKeys as $key) {
+            if (array_key_exists($key, $metadataMap)) {
+                $map[$key] = $metadataMap[$key];
+            }
+        }
+
+        return $map;
     }
 
     /**
