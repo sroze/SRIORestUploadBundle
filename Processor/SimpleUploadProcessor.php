@@ -3,7 +3,6 @@ namespace SRIO\RestUploadBundle\Processor;
 
 use SRIO\RestUploadBundle\Storage\FileStorage;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 use SRIO\RestUploadBundle\Upload\UploadResult;
 
@@ -18,7 +17,7 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
     public function handleRequest (Request $request)
     {
         // Check that needed headers exists
-        $this->checkHeaders($request, array('Content-Length', 'Content-Type'));
+        $this->checkHeaders($request, array('Content-Type'));
 
         $result = new UploadResult();
         $result->setForm($this->form);
