@@ -1,6 +1,7 @@
 <?php
 namespace SRIO\RestUploadBundle\Processor;
 
+use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Storage\FileStorage;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -32,6 +33,12 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
 
         if ($this->form == null || $this->form->isValid()) {
             $content = $request->getContent();
+
+			// Nothing to store
+			if (empty($content)) {
+				throw new UploadException('There is no content to upload');
+			}
+
             $file = $this->storageHandler->store($result, $content, array(
                 FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('Content-Type')
             ));
