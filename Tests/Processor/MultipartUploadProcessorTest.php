@@ -61,9 +61,9 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
         $this->assertEquals('image/gif', $contentType);
         $this->assertEquals($image, $body);
 
-		// Clean up
-		fclose($resource);
-		unlink($tempFile);
+        // Clean up
+        fclose($resource);
+        unlink($tempFile);
     }
 
     protected function createMultipartRequest ($jsonData, $binaryContent)
