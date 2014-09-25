@@ -53,11 +53,11 @@ class RequestContentHandler implements RequestContentHandlerInterface
         if ($eof) {
             $line = substr($content, $this->cursor);
         } else {
-            $length = $next - $this->cursor + 1;
+            $length = $next - $this->cursor + strlen(PHP_EOL);
             $line = substr($content, $this->cursor, $length);
         }
 
-        $this->cursor = $eof ? -1 : $next + 1;
+        $this->cursor = $eof ? -1 : $next + strlen(PHP_EOL);
 
         return $line;
     }
