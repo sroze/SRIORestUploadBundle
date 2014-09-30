@@ -119,14 +119,17 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     /**
      * Check that needed headers are here.
      *
+     * @param Request $request the request
+     * @param array $headers the headers to check
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
      */
     protected function checkHeaders (Request $request, array $headers)
     {
         foreach ($headers as $header) {
-            if (!$request->headers->has($header)) {
+            $value = $request->headers->get($header, null);
+            if ($value === null) {
                 throw new UploadException(sprintf('%s header is needed', $header));
-            } else if ($request->headers->get($header, null) === null) {
+            } else if (!is_int($value) && empty($value)) {
                 throw new UploadException(sprintf('%s header must not be empty', $header));
             }
         }

@@ -3,13 +3,15 @@ namespace SRIO\RestUploadBundle\Tests\Upload;
 
 class SimpleUploadTest extends AbstractUploadTestCase
 {
-    public function testWithoutHeadersSimpleUpload()
+    public function testWithEmptyContentTypeHeaderSimpleUpload()
     {
         $client = static::createClient();
         $queryParameters = array('uploadType' => 'simple', 'name' => 'test');
 
         $content = $this->getResource($client, 'apple.gif');
-        $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array(), $content);
+
+        // Set empty content type header since Request defaults to application/x-www-form-urlencoded
+        $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array('CONTENT_TYPE' => ''), $content);
 
         $response = $client->getResponse();
         $this->assertEquals(400, $response->getStatusCode());
