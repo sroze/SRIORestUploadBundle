@@ -116,13 +116,13 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
         return $this->contentHandler;
     }
 
-	/**
-	 * Check that needed headers are here.
-	 *
-	 * @param Request $request the request
-	 * @param array $headers the headers to check
-	 * @throws \SRIO\RestUploadBundle\Exception\UploadException
-	 */
+    /**
+     * Check that needed headers are here.
+     *
+     * @param Request $request the request
+     * @param array $headers the headers to check
+     * @throws \SRIO\RestUploadBundle\Exception\UploadException
+     */
     protected function checkHeaders (Request $request, array $headers)
     {
         foreach ($headers as $header) {

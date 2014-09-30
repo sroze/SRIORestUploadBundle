@@ -10,7 +10,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
 
         $content = $this->getResource($client, 'apple.gif');
 
-		// Set empty content type header since Request defaults to application/x-www-form-urlencoded
+        // Set empty content type header since Request defaults to application/x-www-form-urlencoded
         $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array('CONTENT_TYPE' => ''), $content);
 
         $response = $client->getResponse();
