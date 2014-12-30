@@ -6,7 +6,7 @@ use SRIO\RestUploadBundle\Request\RequestContentHandler;
 
 class RequestContentHandlerTest extends AbstractUploadTestCase
 {
-    public function testBinaryStringContent ()
+    public function testBinaryStringContent()
     {
         $client = static::createClient();
         $filePath = $this->getResourcePath($client, 'apple.gif');
@@ -15,7 +15,7 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
         $this->doTest($content, $content);
     }
 
-    public function testBinaryResourceContent ()
+    public function testBinaryResourceContent()
     {
         $client = static::createClient();
         $filePath = $this->getResourcePath($client, 'apple.gif');
@@ -25,7 +25,7 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
         $this->doTest($expectedContent, $content);
     }
 
-    public function testStringContent ()
+    public function testStringContent()
     {
         $client = static::createClient();
         $filePath = $this->getResourcePath($client, 'lorem.txt');
@@ -34,7 +34,7 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
         $this->doTest($content, $content);
     }
 
-    public function testStringResourceContent ()
+    public function testStringResourceContent()
     {
         $client = static::createClient();
         $filePath = $this->getResourcePath($client, 'lorem.txt');
@@ -44,7 +44,7 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
         $this->doTest($expectedContent, $content);
     }
 
-    protected function doTest ($expectedContent, $content)
+    protected function doTest($expectedContent, $content)
     {
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $request->expects($this->any())
@@ -62,4 +62,4 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
         $this->assertEquals($expectedContent, $foundContent);
         $this->assertTrue($handler->eof());
     }
-} 
+}

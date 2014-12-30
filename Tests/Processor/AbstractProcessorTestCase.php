@@ -10,12 +10,13 @@ abstract class AbstractProcessorTestCase extends AbstractUploadTestCase
      *
      * @param $object
      * @param $methodName
-     * @param array $arguments
+     * @param  array $arguments
      * @return mixed
      */
-    protected function callMethod ($object, $methodName, array $arguments)
+    protected function callMethod($object, $methodName, array $arguments)
     {
         $method = $this->getMethod(get_class($object), $methodName);
+
         return $method->invokeArgs($object, $arguments);
     }
 
@@ -25,7 +26,7 @@ abstract class AbstractProcessorTestCase extends AbstractUploadTestCase
      * @param $name
      * @return \ReflectionMethod
      */
-    protected function getMethod ($className, $name)
+    protected function getMethod($className, $name)
     {
         $class = new \ReflectionClass($className);
 
@@ -38,7 +39,7 @@ abstract class AbstractProcessorTestCase extends AbstractUploadTestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getMockEntityManager ()
+    protected function getMockEntityManager()
     {
         return $this->getMock('\Doctrine\ORM\EntityManager',
             array('getRepository', 'getClassMetadata', 'persist', 'flush'), array(), '', false);

@@ -27,11 +27,11 @@ class FormDataUploadProcessor extends SimpleUploadProcessor
     }
 
     /**
-     * @param Request $request
+     * @param  Request                                                     $request
      * @return \SRIO\RestUploadBundle\Upload\UploadResult
      * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
      */
-    public function handleRequest (Request $request)
+    public function handleRequest(Request $request)
     {
         // Check that needed headers exists
         $this->checkHeaders($request, array('Content-Length', 'Content-Type'));
@@ -60,7 +60,7 @@ class FormDataUploadProcessor extends SimpleUploadProcessor
                 if (!$submittedValue) {
                     throw new UploadException('Unable to decode JSON');
                 }
-            } else if (!is_array($submittedValue)) {
+            } elseif (!is_array($submittedValue)) {
                 throw new UploadException('Unable to parse form data');
             }
 

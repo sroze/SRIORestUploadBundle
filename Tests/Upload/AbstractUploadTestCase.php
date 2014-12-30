@@ -11,7 +11,7 @@ abstract class AbstractUploadTestCase extends WebTestCase
      *
      * @param Client $client
      */
-    protected function assertResponseHasErrors (Client $client)
+    protected function assertResponseHasErrors(Client $client)
     {
         $response = $client->getResponse();
         $this->assertEquals(400, $response->getStatusCode());
@@ -20,12 +20,12 @@ abstract class AbstractUploadTestCase extends WebTestCase
     /**
      * Get content of a resource.
      *
-     * @param Client $client
+     * @param  Client            $client
      * @param $name
      * @return string
      * @throws \RuntimeException
      */
-    protected function getResource (Client $client, $name)
+    protected function getResource(Client $client, $name)
     {
         $filePath = $this->getResourcePath($client, $name);
         if (!file_exists($filePath)) {
@@ -41,11 +41,11 @@ abstract class AbstractUploadTestCase extends WebTestCase
     /**
      * Get uploaded file path.
      *
-     * @param Client $client
+     * @param  Client $client
      * @param $name
      * @return string
      */
-    protected function getUploadedFilePath (Client $client)
+    protected function getUploadedFilePath(Client $client)
     {
         return $client->getContainer()->getParameter('kernel.root_dir').'/../web/uploads';
     }
@@ -53,11 +53,11 @@ abstract class AbstractUploadTestCase extends WebTestCase
     /**
      * Get resource path.
      *
-     * @param Client $client
+     * @param  Client $client
      * @param $name
      * @return string
      */
-    protected function getResourcePath (Client $client, $name)
+    protected function getResourcePath(Client $client, $name)
     {
         return $client->getContainer()->getParameter('kernel.root_dir').'/../../Resources/'.$name;
     }

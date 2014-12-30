@@ -17,9 +17,9 @@ class UploadedFile
 
     /**
      * @param FileStorage $storage
-     * @param File $file
+     * @param File        $file
      */
-    public function __construct (FileStorage $storage, File $file)
+    public function __construct(FileStorage $storage, File $file)
     {
         $this->storage = $storage;
         $this->file = $file;

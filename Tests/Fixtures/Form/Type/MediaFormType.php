@@ -32,7 +32,7 @@ class MediaFormType extends AbstractType
         ));
     }
 
-    public function getName ()
+    public function getName()
     {
         return null;
     }

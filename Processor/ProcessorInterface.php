@@ -13,9 +13,9 @@ interface ProcessorInterface
     /**
      * Handle the upload request.
      *
-     * @param Request $request
+     * @param Request       $request
      * @param FormInterface $form
-     * @param array $options
+     * @param array         $options
      *
      * @return \SRIO\RestUploadBundle\Upload\UploadResult
      */

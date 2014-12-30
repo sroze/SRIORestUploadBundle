@@ -27,7 +27,7 @@ class StorageVoter
      *
      * @param $defaultStorage
      */
-    public function __construct ($defaultStorage = null)
+    public function __construct($defaultStorage = null)
     {
         $this->defaultStorage = $defaultStorage;
     }
@@ -35,10 +35,10 @@ class StorageVoter
     /**
      * Add a storage.
      *
-     * @param FileStorage $storage
+     * @param  FileStorage       $storage
      * @throws \RuntimeException
      */
-    public function addStorage (FileStorage $storage)
+    public function addStorage(FileStorage $storage)
     {
         if (array_key_exists($storage->getName(), $this->storages)) {
             throw new \RuntimeException(sprintf(
@@ -53,12 +53,12 @@ class StorageVoter
     /**
      * Get the best storage based on request and/or parameters.
      *
-     * @param UploadContext $context
+     * @param  UploadContext                                    $context
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
      * @throws \RuntimeException
      * @return FileStorage
      */
-    public function getStorage (UploadContext $context)
+    public function getStorage(UploadContext $context)
     {
         if (count($this->storages) == 0) {
             throw new UploadException('No storage found');

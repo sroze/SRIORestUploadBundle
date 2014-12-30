@@ -37,11 +37,11 @@ class FileStorage
      * Constructor.
      *
      * @param $name
-     * @param Filesystem $filesystem
+     * @param Filesystem      $filesystem
      * @param StorageStrategy $storageStrategy
-     * @param NamingStrategy $namingStrategy
+     * @param NamingStrategy  $namingStrategy
      */
-    public function __construct ($name, Filesystem $filesystem, StorageStrategy $storageStrategy, NamingStrategy $namingStrategy)
+    public function __construct($name, Filesystem $filesystem, StorageStrategy $storageStrategy, NamingStrategy $namingStrategy)
     {
         $this->name = $name;
         $this->filesystem = $filesystem;
@@ -52,9 +52,9 @@ class FileStorage
     /**
      * Store a file content.
      *
-     * @param UploadContext $context
+     * @param  UploadContext $context
      * @param $content
-     * @param array $metadataMap
+     * @param  array         $metadataMap
      * @return UploadedFile
      */
     public function store (UploadContext $context, $content, array $metadataMap = array())
@@ -70,14 +70,15 @@ class FileStorage
         $this->filesystem->write($path, $content);
 
         $file = $this->filesystem->get($path);
+
         return new UploadedFile($this, $file);
     }
 
     /**
      * Resolve the metadata map.
      *
-     * @param UploadContext $context
-     * @param array $metadataMap
+     * @param  UploadContext $context
+     * @param  array         $metadataMap
      * @return array
      */
     protected function resolveMetadataMap(UploadContext $context, array $metadataMap)
@@ -100,7 +101,7 @@ class FileStorage
      * @param $name
      * @return int
      */
-    public function size ($name)
+    public function size($name)
     {
         return $this->filesystem->size($name);
     }
@@ -111,7 +112,7 @@ class FileStorage
      * @param $name
      * @return File
      */
-    public function get ($name)
+    public function get($name)
     {
         return $this->filesystem->get($name);
     }
@@ -122,7 +123,7 @@ class FileStorage
      * @param $name
      * @return \Gaufrette\Stream|\Gaufrette\Stream\InMemoryBuffer
      */
-    public function getStream ($name)
+    public function getStream($name)
     {
         return $this->filesystem->createStream($name);
     }
@@ -158,4 +159,4 @@ class FileStorage
     {
         return $this->storageStrategy;
     }
-} 
+}

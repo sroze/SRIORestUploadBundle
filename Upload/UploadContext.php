@@ -35,8 +35,8 @@ class UploadContext
      * Constructor.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\Form\FormInterface $form
-     * @param array $config
+     * @param \Symfony\Component\Form\FormInterface     $form
+     * @param array                                     $config
      */
     public function __construct (Request $request = null, FormInterface $form = null, array $config = array())
     {
@@ -124,4 +124,4 @@ class UploadContext
     {
         return $this->storageName;
     }
-} 
+}

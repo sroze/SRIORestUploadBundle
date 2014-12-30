@@ -44,4 +44,4 @@ class UploadResult extends UploadContext
     {
         return $this->response;
     }
-} 
+}

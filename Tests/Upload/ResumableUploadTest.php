@@ -21,7 +21,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
         $this->assertSuccessful($client, $content);
     }
 
-    public function testChunkedUpload ()
+    public function testChunkedUpload()
     {
         $client = $this->startSession();
 
@@ -58,7 +58,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
         $this->assertSuccessful($client, $content);
     }
 
-    protected function startSession ()
+    protected function startSession()
     {
         $client = static::createClient();
         $content = $this->getResource($client, 'apple.gif');
@@ -80,7 +80,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
         return $client;
     }
 
-    protected function assertSuccessful (Client $client, $content)
+    protected function assertSuccessful(Client $client, $content)
     {
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());

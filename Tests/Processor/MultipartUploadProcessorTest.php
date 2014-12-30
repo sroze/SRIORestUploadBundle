@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\HeaderBag;
 
 class MultipartUploadProcessorTest extends AbstractProcessorTestCase
 {
-    public function testGetPartsString ()
+    public function testGetPartsString()
     {
         $client = static::createClient();
         $image = $this->getResource($client, 'apple.gif');
@@ -31,7 +31,7 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
         $this->assertEquals($image, $body);
     }
 
-    public function testGetPartsResource ()
+    public function testGetPartsResource()
     {
         $client = static::createClient();
         $image = $this->getResource($client, 'apple.gif');
@@ -66,14 +66,15 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
         unlink($tempFile);
     }
 
-    protected function createMultipartRequest ($jsonData, $binaryContent)
+    protected function createMultipartRequest($jsonData, $binaryContent)
     {
         $boundary = uniqid();
         $content = $this->createMultipartContent($boundary, $jsonData, $binaryContent);
+
         return $this->createMultipartRequestWithContent($boundary, $content);
     }
 
-    protected function createMultipartContent ($boundary, $jsonData, $binaryContent)
+    protected function createMultipartContent($boundary, $jsonData, $binaryContent)
     {
         $content = '--'.$boundary.PHP_EOL.'Content-Type: application/json; charset=UTF-8'.PHP_EOL.PHP_EOL.$jsonData.PHP_EOL.PHP_EOL;
         $content .= '--'.$boundary.PHP_EOL.'Content-Type: image/gif'.PHP_EOL.PHP_EOL.$binaryContent.PHP_EOL.PHP_EOL;
@@ -82,7 +83,7 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
         return $content;
     }
 
-    protected function createMultipartRequestWithContent ($boundary, $content)
+    protected function createMultipartRequestWithContent($boundary, $content)
     {
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $request->expects($this->any())
@@ -96,7 +97,7 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
         return $request;
     }
 
-    protected function getProcessor ()
+    protected function getProcessor()
     {
         $voter = $this->getMock(
             'SRIO\RestUploadBundle\Voter\StorageVoter'
@@ -116,4 +117,4 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
 
         return $processor;
     }
-} 
+}

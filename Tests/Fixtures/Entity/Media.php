@@ -53,7 +53,7 @@ class Media implements UploadableFileInterface
      * Set uploaded file.
      *
      */
-    public function setFile (UploadedFile $uploaded)
+    public function setFile(UploadedFile $uploaded)
     {
         $this->path = $uploaded->getFile()->getName();
         $this->size = $uploaded->getFile()->getSize();

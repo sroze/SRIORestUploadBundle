@@ -44,9 +44,9 @@ class SRIORestUploadExtension extends Extension
      * Create storage services.
      *
      * @param ContainerBuilder $container
-     * @param array $storageDefinitions
+     * @param array            $storageDefinitions
      */
-    private function createStorageServices (ContainerBuilder $container, array $storageDefinitions)
+    private function createStorageServices(ContainerBuilder $container, array $storageDefinitions)
     {
         $voterDefinition = $container->getDefinition('srio_rest_upload.storage_voter');
         $factory = new StorageFactory();
@@ -60,13 +60,13 @@ class SRIORestUploadExtension extends Extension
     /**
      * Create a single storage service.
      *
-     * @param StorageFactory $factory
-     * @param ContainerBuilder $containerBuilder
+     * @param  StorageFactory   $factory
+     * @param  ContainerBuilder $containerBuilder
      * @param $name
-     * @param array $config
+     * @param  array            $config
      * @return string
      */
-    private function createStorage (StorageFactory $factory, ContainerBuilder $containerBuilder, $name, array $config)
+    private function createStorage(StorageFactory $factory, ContainerBuilder $containerBuilder, $name, array $config)
     {
         $id = sprintf('srio_rest_upload.storage.%s', $name);
 
@@ -82,7 +82,7 @@ class SRIORestUploadExtension extends Extension
      * @param ContainerBuilder $builder
      * @param $service
      */
-    private function createStorageVoter (ContainerBuilder $builder, $service)
+    private function createStorageVoter(ContainerBuilder $builder, $service)
     {
         $definition = new DefinitionDecorator($service);
         $builder->setDefinition('srio_rest_upload.storage_voter', $definition);

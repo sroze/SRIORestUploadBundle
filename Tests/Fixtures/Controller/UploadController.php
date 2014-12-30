@@ -20,12 +20,12 @@ class UploadController extends Controller
      * @Route("/upload")
      * @Method({"POST", "PUT"})
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param  \Symfony\Component\HttpFoundation\Request                          $request
      * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException
      * @return JsonResponse
      */
-    public function uploadAction (Request $request)
+    public function uploadAction(Request $request)
     {
         $form = $this->createForm(new MediaFormType());
 

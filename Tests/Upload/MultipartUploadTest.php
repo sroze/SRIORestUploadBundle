@@ -3,7 +3,7 @@ namespace SRIO\RestUploadBundle\Tests\Upload;
 
 class MultipartUploadTest extends AbstractUploadTestCase
 {
-    public function testWithoutContent ()
+    public function testWithoutContent()
     {
         $client = static::createClient();
         $queryParameters = array('name' => 'test');

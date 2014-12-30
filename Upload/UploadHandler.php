@@ -26,7 +26,7 @@ class UploadHandler
      *
      * @var string $uploadTypeParameter
      */
-    public function __construct ($uploadTypeParameter)
+    public function __construct($uploadTypeParameter)
     {
         $this->uploadTypeParameter = $uploadTypeParameter;
     }
@@ -39,7 +39,7 @@ class UploadHandler
      *
      * @throws \LogicException
      */
-    public function addProcessor ($uploadType, ProcessorInterface $processor)
+    public function addProcessor($uploadType, ProcessorInterface $processor)
     {
         if (array_key_exists($uploadType, $this->processors)) {
             throw new \LogicException(sprintf(
@@ -54,9 +54,9 @@ class UploadHandler
     /**
      * Handle the upload request.
      *
-     * @param Request $request
+     * @param Request                               $request
      * @param \Symfony\Component\Form\FormInterface $form
-     * @param array $config
+     * @param array                                 $config
      *
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
      * @return UploadResult
@@ -84,12 +84,12 @@ class UploadHandler
      * Get the upload processor.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param array $config
+     * @param array                                     $config
      *
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @return ProcessorInterface
      */
-    protected function getProcessor (Request $request, array $config)
+    protected function getProcessor(Request $request, array $config)
     {
         $uploadType = $request->get($this->getUploadTypeParameter($config));
 
@@ -112,7 +112,7 @@ class UploadHandler
      *
      * @return mixed
      */
-    protected function getUploadTypeParameter (array $extraConfiguration)
+    protected function getUploadTypeParameter(array $extraConfiguration)
     {
         return array_key_exists('uploadTypeParameter', $extraConfiguration)
             ? $extraConfiguration['uploadTypeParameter']

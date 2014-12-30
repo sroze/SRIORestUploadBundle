@@ -22,15 +22,15 @@ class StorageHandler
      *
      * @param StorageVoter $voter
      */
-    public function __construct (StorageVoter $voter)
+    public function __construct(StorageVoter $voter)
     {
         $this->voter = $voter;
     }
 
     /**
-     * @param UploadContext $context
+     * @param  UploadContext $context
      * @param $contents
-     * @param array $metadataMap
+     * @param  array         $metadataMap
      * @return UploadedFile
      */
     public function store (UploadContext $context, $contents, array $metadataMap = array())
@@ -41,11 +41,11 @@ class StorageHandler
     /**
      * Get file size.
      *
-     * @param UploadContext $context
+     * @param  UploadContext $context
      * @param $name
      * @return int
      */
-    public function size (UploadContext $context, $name)
+    public function size(UploadContext $context, $name)
     {
         return $this->getStorage($context)->size($name);
     }
@@ -53,11 +53,11 @@ class StorageHandler
     /**
      * Get file.
      *
-     * @param UploadContext $context
+     * @param  UploadContext   $context
      * @param $name
      * @return \Gaufrette\File
      */
-    public function get (UploadContext $context, $name)
+    public function get(UploadContext $context, $name)
     {
         return $this->getStorage($context)->get($name);
     }
@@ -65,11 +65,11 @@ class StorageHandler
     /**
      * Get a stream for that file.
      *
-     * @param UploadContext $context
+     * @param  UploadContext                                      $context
      * @param $name
      * @return \Gaufrette\Stream|\Gaufrette\Stream\InMemoryBuffer
      */
-    public function getStream (UploadContext $context, $name)
+    public function getStream(UploadContext $context, $name)
     {
         return $this->getStorage($context)->getStream($name);
     }
@@ -77,11 +77,11 @@ class StorageHandler
     /**
      * Get storage by upload context.
      *
-     * @param UploadContext $context
+     * @param  UploadContext                                    $context
      * @return FileStorage
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
      */
-    public function getStorage (UploadContext $context)
+    public function getStorage(UploadContext $context)
     {
         $storage = $this->voter->getStorage($context);
         if (!$storage instanceof FileStorage) {
@@ -90,4 +90,4 @@ class StorageHandler
 
         return $storage;
     }
-} 
+}

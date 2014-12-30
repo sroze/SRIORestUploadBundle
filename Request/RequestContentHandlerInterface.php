@@ -1,7 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Request;
 
-
 interface RequestContentHandlerInterface
 {
     /**
@@ -24,4 +23,4 @@ interface RequestContentHandlerInterface
      * @return int
      */
     public function getCursor();
-} 
+}

@@ -21,4 +21,4 @@ class StorageFactory
             ->addArgument(new Reference($config['naming_strategy']))
         ;
     }
-} 
+}

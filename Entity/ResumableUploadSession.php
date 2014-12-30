@@ -1,9 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
-
 /**
  * This model represent a resumable upload session. It is used to store
  * a session ID and the related file path.

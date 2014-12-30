@@ -10,12 +10,12 @@ use SRIO\RestUploadBundle\Upload\UploadResult;
 class SimpleUploadProcessor extends AbstractUploadProcessor
 {
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param  \Symfony\Component\HttpFoundation\Request                   $request
      * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
-     * @param Request $request
+     * @param  Request                                                     $request
      * @return UploadResult
      */
-    public function handleRequest (Request $request)
+    public function handleRequest(Request $request)
     {
         // Check that needed headers exists
         $this->checkHeaders($request, array('Content-Type'));

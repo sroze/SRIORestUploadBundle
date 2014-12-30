@@ -25,7 +25,7 @@ class RequestContentHandler implements RequestContentHandlerInterface
      *
      * @param Request $request
      */
-    public function __construct (Request $request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
         $this->cursor = 0;
@@ -38,12 +38,13 @@ class RequestContentHandler implements RequestContentHandlerInterface
      *
      * @return string|boolean
      */
-    public function gets ()
+    public function gets()
     {
         $content = $this->getContent();
         if (is_resource($content)) {
             $line = fgets($content);
             $this->cursor = ftell($content);
+
             return $line;
         }
 
@@ -65,7 +66,7 @@ class RequestContentHandler implements RequestContentHandlerInterface
     /**
      * @return int
      */
-    public function getCursor ()
+    public function getCursor()
     {
         return $this->cursor;
     }
@@ -75,7 +76,7 @@ class RequestContentHandler implements RequestContentHandlerInterface
      *
      * @return bool
      */
-    public function eof ()
+    public function eof()
     {
         return $this->cursor == -1 || (is_resource($this->getContent()) && feof($this->getContent()));
     }
@@ -86,7 +87,7 @@ class RequestContentHandler implements RequestContentHandlerInterface
      * @return resource|string
      * @throws \RuntimeException
      */
-    public function getContent ()
+    public function getContent()
     {
         if ($this->content === null) {
             try {

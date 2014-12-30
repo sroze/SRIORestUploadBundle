@@ -12,11 +12,11 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * {@inheritDoc}
      *
-     * @param Request $request
+     * @param  Request                                                     $request
      * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
      * @return \SRIO\RestUploadBundle\Upload\UploadResult
      */
-    public function handleRequest (Request $request)
+    public function handleRequest(Request $request)
     {
         // Check that needed headers exists
         $this->checkHeaders($request);
@@ -54,11 +54,11 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      *
      * Note: MUST be called before getContent, and just one time.
      *
-     * @param Request $request
+     * @param  Request                                                   $request
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @return array
      */
-    protected function getFormData (Request $request)
+    protected function getFormData(Request $request)
     {
         list($boundaryContentType, $boundaryContent) = $this->getPart($request);
 
@@ -84,11 +84,11 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      *
      * Note: MUST be called after getFormData, and just one time.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param Request $request
+     * @param  \Symfony\Component\HttpFoundation\Request $request
+     * @param  Request                                   $request
      * @return array
      */
-    protected function getContent (Request $request)
+    protected function getContent(Request $request)
     {
         return $this->getPart($request);
     }
@@ -96,8 +96,8 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Check multipart headers.
      *
-     * @param Request $request
-     * @param array $headers
+     * @param  Request                                                   $request
+     * @param  array                                                     $headers
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      */
     protected function checkHeaders (Request $request, array $headers = array())
@@ -118,11 +118,11 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Get a part of request.
      *
-     * @param Request $request
+     * @param  Request                                                   $request
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @return array
      */
-    protected function getPart (Request $request)
+    protected function getPart(Request $request)
     {
         list($contentType, $boundary) = $this->parseContentTypeAndBoundary($request);
         $content = $this->getRequestPart($request, $boundary);
@@ -161,12 +161,12 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Get part of a resource.
      *
-     * @param Request $request
+     * @param  Request                                                   $request
      * @param $boundary
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @return string
      */
-    protected function getRequestPart (Request $request, $boundary)
+    protected function getRequestPart(Request $request, $boundary)
     {
         $contentHandler = $this->getRequestContentHandler($request);
 
@@ -190,9 +190,9 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
                 }
 
                 $boundaryCount++;
-            } else if ($line == $delimiter) {
+            } elseif ($line == $delimiter) {
                 break;
-            } else if ($line == $endDelimiter || $line == $endDelimiter.PHP_EOL) {
+            } elseif ($line == $endDelimiter || $line == $endDelimiter.PHP_EOL) {
                 break;
             }
 
@@ -205,11 +205,11 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Parse the content type and boudary from Content-Type header.
      *
-     * @param Request $request
+     * @param  Request                                                   $request
      * @return array
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      */
-    protected function parseContentTypeAndBoundary (Request $request)
+    protected function parseContentTypeAndBoundary(Request $request)
     {
         $contentParts = explode(';', $request->headers->get('Content-Type'));
         if (count($contentParts) != 2) {

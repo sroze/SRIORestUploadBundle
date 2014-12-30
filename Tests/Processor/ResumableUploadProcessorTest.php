@@ -8,7 +8,7 @@ class ResumableUploadProcessorTest extends AbstractProcessorTestCase
     /**
      * @dataProvider contentSuccessRangeDataProvider
      */
-    public function testSuccessComputeContentRange ($string, $start, $end, $length)
+    public function testSuccessComputeContentRange($string, $start, $end, $length)
     {
         $result = $this->callParseContentRange($string);
         $this->assertTrue(is_array($result));
@@ -22,7 +22,7 @@ class ResumableUploadProcessorTest extends AbstractProcessorTestCase
      * @expectedException \SRIO\RestUploadBundle\Exception\UploadProcessorException
      * @param $string
      */
-    public function testErrorComputeContentRange ($string)
+    public function testErrorComputeContentRange($string)
     {
         $this->callParseContentRange($string);
     }
@@ -33,7 +33,7 @@ class ResumableUploadProcessorTest extends AbstractProcessorTestCase
      * @param $string
      * @return mixed
      */
-    protected function callParseContentRange ($string)
+    protected function callParseContentRange($string)
     {
         $voter = $this->getMock(
             'SRIO\RestUploadBundle\Voter\StorageVoter'
@@ -48,6 +48,7 @@ class ResumableUploadProcessorTest extends AbstractProcessorTestCase
         $method = $this->getMethod('\SRIO\RestUploadBundle\Processor\ResumableUploadProcessor', 'parseContentRange');
         $em = $this->getMockEntityManager();
         $uploadProcessor = new ResumableUploadProcessor($storageHandler, $em, 'SRIO\RestUploadBundle\Tests\Fixtures\Entity\ResumableUploadSession');
+
         return $method->invokeArgs($uploadProcessor, array($string));
     }
 
@@ -55,7 +56,7 @@ class ResumableUploadProcessorTest extends AbstractProcessorTestCase
      * Data Provider for success Content-Range test.
      *
      */
-    public function contentSuccessRangeDataProvider ()
+    public function contentSuccessRangeDataProvider()
     {
         return array(
             array('bytes 1-2/12', 1, 2, 12),
@@ -68,7 +69,7 @@ class ResumableUploadProcessorTest extends AbstractProcessorTestCase
      * Data Provider for error Content-Range test.
      *
      */
-    public function contentErrorRangeDataProvider ()
+    public function contentErrorRangeDataProvider()
     {
         return array(
             array('bytes 2-1/12'),
@@ -77,4 +78,4 @@ class ResumableUploadProcessorTest extends AbstractProcessorTestCase
             array('1-2/12')
         );
     }
-} 
+}
