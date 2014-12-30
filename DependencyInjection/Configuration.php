@@ -41,7 +41,7 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('srio_rest_upload.storage_voter.default')
                 ->end()
-                ->scalarNode('resumable_entity_class')->end()
+                ->scalarNode('resumable_entity_class')->defaultNull()->end()
                 ->scalarNode('upload_type_parameter')
                     ->defaultValue('uploadType')
                 ->end()
