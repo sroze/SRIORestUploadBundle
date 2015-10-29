@@ -76,8 +76,8 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
 
     protected function createMultipartContent($boundary, $jsonData, $binaryContent)
     {
-        $content = '--'.$boundary.PHP_EOL.'Content-Type: application/json; charset=UTF-8'.PHP_EOL.PHP_EOL.$jsonData.PHP_EOL.PHP_EOL;
-        $content .= '--'.$boundary.PHP_EOL.'Content-Type: image/gif'.PHP_EOL.PHP_EOL.$binaryContent.PHP_EOL.PHP_EOL;
+        $content = '--'.$boundary."\r\n".'Content-Type: application/json; charset=UTF-8'."\r\n\r\n".$jsonData."\r\n\r\n";
+        $content .= '--'.$boundary."\r\n".'Content-Type: image/gif'."\r\n\r\n".$binaryContent."\r\n\r\n";
         $content .= '--'.$boundary.'--';
 
         return $content;

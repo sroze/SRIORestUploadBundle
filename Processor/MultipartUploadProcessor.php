@@ -131,7 +131,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
             throw new UploadProcessorException(sprintf('An empty content found'));
         }
 
-        $headerLimitation = strpos($content, PHP_EOL.PHP_EOL) + 1;
+        $headerLimitation = strpos($content, "\r\n\r\n") + 1;
         if ($headerLimitation == -1) {
             throw new UploadProcessorException('Unable to determine headers limit');
         }
@@ -142,7 +142,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
         $body = substr($content, $headerLimitation);
         $body = trim($body);
 
-        foreach (explode(PHP_EOL, $headersContent) as $header) {
+        foreach (explode("\r\n", $headersContent) as $header) {
             $parts = explode(':', $header);
             if (count($parts) != 2) {
                 continue;
@@ -170,7 +170,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     {
         $contentHandler = $this->getRequestContentHandler($request);
 
-        $delimiter = '--'.$boundary.PHP_EOL;
+        $delimiter = '--'.$boundary."\r\n";
         $endDelimiter = '--'.$boundary.'--';
         $boundaryCount = 0;
         $content = '';
@@ -192,7 +192,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
                 $boundaryCount++;
             } elseif ($line == $delimiter) {
                 break;
-            } elseif ($line == $endDelimiter || $line == $endDelimiter.PHP_EOL) {
+            } elseif ($line == $endDelimiter || $line == $endDelimiter."\r\n") {
                 break;
             }
 
