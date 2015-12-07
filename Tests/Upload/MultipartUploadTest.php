@@ -9,7 +9,7 @@ class MultipartUploadTest extends AbstractUploadTestCase
         $queryParameters = array('name' => 'test');
 
         $boundary = uniqid();
-        $content = '--'.$boundary.PHP_EOL.'Content-Type: application/json; charset=UTF-8'.PHP_EOL.PHP_EOL.json_encode($queryParameters).PHP_EOL.PHP_EOL;
+        $content = '--'.$boundary."\r\n".'Content-Type: application/json; charset=UTF-8'."\r\n\r\n".json_encode($queryParameters)."\r\n\r\n";
         $content .= '--'.$boundary.'--';
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
@@ -26,8 +26,8 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $boundary = uniqid();
         $image = $this->getResource($client, 'apple.gif');
-        $content = '--'.$boundary.PHP_EOL.'Content-Type: image/gif'.PHP_EOL.PHP_EOL.$image.PHP_EOL.PHP_EOL;
-        $content .= '--'.$boundary.PHP_EOL.'Content-Type: application/json; charset=UTF-8'.PHP_EOL.PHP_EOL.json_encode($queryParameters).PHP_EOL.PHP_EOL;
+        $content = '--'.$boundary."\r\n".'Content-Type: image/gif'."\r\n\r\n".$image."\r\n\r\n";
+        $content .= '--'.$boundary."\r\n".'Content-Type: application/json; charset=UTF-8'."\r\n\r\n".json_encode($queryParameters)."\r\n\r\n";
         $content .= '--'.$boundary.'--';
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(), $content);
@@ -41,8 +41,8 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $boundary = uniqid();
         $image = $this->getResource($client, 'apple.gif');
-        $content = '--'.$boundary.PHP_EOL.'Content-Type: image/gif'.PHP_EOL.PHP_EOL.$image.PHP_EOL.PHP_EOL;
-        $content .= '--'.$boundary.PHP_EOL.'Content-Type: application/json; charset=UTF-8'.PHP_EOL.PHP_EOL.json_encode($queryParameters).PHP_EOL.PHP_EOL;
+        $content = '--'.$boundary."\r\n".'Content-Type: image/gif'."\r\n\r\n".$image."\r\n\r\n";
+        $content .= '--'.$boundary."\r\n".'Content-Type: application/json; charset=UTF-8'."\r\n\r\n".json_encode($queryParameters)."\r\n\r\n";
         $content .= '--'.$boundary.'--';
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
@@ -59,8 +59,8 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $boundary = uniqid();
         $image = $this->getResource($client, 'apple.gif');
-        $content = '--'.$boundary.PHP_EOL.'Content-Type: image/gif'.PHP_EOL.PHP_EOL.$image.PHP_EOL.PHP_EOL;
-        $content .= '--'.$boundary.PHP_EOL.'Content-Type: application/json; charset=UTF-8'.PHP_EOL.PHP_EOL.json_encode($queryParameters).PHP_EOL.PHP_EOL;
+        $content = '--'.$boundary."\r\n".'Content-Type: image/gif'."\r\n\r\n".$image."\r\n\r\n";
+        $content .= '--'.$boundary."\r\n".'Content-Type: application/json; charset=UTF-8'."\r\n\r\n".json_encode($queryParameters)."\r\n\r\n";
         $content .= '--'.$boundary.'--';
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
@@ -77,8 +77,8 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $boundary = uniqid();
         $image = $this->getResource($client, 'apple.gif');
-        $content = '--'.$boundary.PHP_EOL.'Content-Type: application/json; charset=UTF-8'.PHP_EOL.PHP_EOL.json_encode($queryParameters).PHP_EOL.PHP_EOL;
-        $content .= '--'.$boundary.PHP_EOL.'Content-Type: image/gif'.PHP_EOL.PHP_EOL.$image.PHP_EOL.PHP_EOL;
+        $content = '--'.$boundary."\r\n".'Content-Type: application/json; charset=UTF-8'."\r\n\r\n".json_encode($queryParameters)."\r\n\r\n";
+        $content .= '--'.$boundary."\r\n".'Content-Type: image/gif'."\r\n\r\n".$image."\r\n\r\n";
         $content .= '--'.$boundary.'--';
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
