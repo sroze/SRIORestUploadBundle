@@ -23,7 +23,7 @@ srio_rest_upload:
 
     # If you want to use the resumable upload way, you must set
     # the class name of your entity which store the upload sessions.
-    resumable_entity: ~
+    resumable_entity_class: ~
 
     # Parameter the define the upload way, internally the provider selector
     upload_type_parameter: uploadType
