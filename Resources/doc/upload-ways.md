@@ -126,7 +126,7 @@ Copy this entity in your bundle and update the schema.
 Configure the bundle to use this entity to store resumable upload sessions:
 ```yml
 srio_rest_upload:
-    resumable_entity: Acme\Entity\ResumableUploadSession
+    resumable_entity_class: Acme\Entity\ResumableUploadSession
 ```
 
 ### Resumable upload requests
