@@ -110,7 +110,7 @@ class FileStorage
      * Get file.
      *
      * @param $name
-     * @return File
+     * @return FileAdapterInterface
      */
     public function get($name)
     {

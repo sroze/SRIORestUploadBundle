@@ -1,9 +1,9 @@
 <?php
 namespace SRIO\RestUploadBundle\Processor;
 
-use Gaufrette\File;
 use Gaufrette\StreamMode;
 use SRIO\RestUploadBundle\Storage\FileStorage;
+use SRIO\RestUploadBundle\Storage\FileAdapterInterface;
 use SRIO\RestUploadBundle\Storage\UploadedFile;
 use SRIO\RestUploadBundle\Upload\UploadContext;
 use SRIO\RestUploadBundle\Upload\UploadResult;
@@ -244,10 +244,10 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      *
      * @param  \SRIO\RestUploadBundle\Upload\UploadContext $context
      * @param  ResumableUploadSession                      $uploadSession
-     * @param  \Gaufrette\File                             $file
+     * @param  FileAdapterInterface                        $file
      * @return UploadResult
      */
-    protected function handleCompletedUpload(UploadContext $context, ResumableUploadSession $uploadSession, File $file)
+    protected function handleCompletedUpload(UploadContext $context, ResumableUploadSession $uploadSession, FileAdapterInterface $file)
     {
         $result = new UploadResult();
         $result->setForm($this->form);
@@ -276,11 +276,11 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      *
      * @param  \SRIO\RestUploadBundle\Upload\UploadContext $context
      * @param  ResumableUploadSession                      $uploadSession
-     * @param  \Gaufrette\File                             $file
+     * @param  FileAdapterInterface                        $file
      * @param  array                                       $range
      * @return UploadResult
      */
-    protected function requestUploadStatus(UploadContext $context, ResumableUploadSession $uploadSession, File $file, array $range)
+    protected function requestUploadStatus(UploadContext $context, ResumableUploadSession $uploadSession, FileAdapterInterface $file, array $range)
     {
         if (!$file->exists()) {
             $length = 0;

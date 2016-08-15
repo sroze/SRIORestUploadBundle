@@ -2,6 +2,7 @@
 namespace SRIO\RestUploadBundle\Upload;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
+use SRIO\RestUploadBundle\Storage\FileAdapterInterface;
 use SRIO\RestUploadBundle\Storage\FileStorage;
 use SRIO\RestUploadBundle\Storage\UploadedFile;
 use SRIO\RestUploadBundle\Voter\StorageVoter;
@@ -55,7 +56,7 @@ class StorageHandler
      *
      * @param  UploadContext   $context
      * @param $name
-     * @return \Gaufrette\File
+     * @return FileAdapterInterface
      */
     public function get(UploadContext $context, $name)
     {
@@ -67,7 +68,7 @@ class StorageHandler
      *
      * @param  UploadContext                                      $context
      * @param $name
-     * @return \Gaufrette\Stream|\Gaufrette\Stream\InMemoryBuffer
+     * @return mixed
      */
     public function getStream(UploadContext $context, $name)
     {
