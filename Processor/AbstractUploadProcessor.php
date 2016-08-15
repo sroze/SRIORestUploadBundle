@@ -52,7 +52,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      * @param  array         $config
      * @return boolean
      */
-    public function handleUpload (Request $request, FormInterface $form = null, array $config = array())
+    public function handleUpload(Request $request, FormInterface $form = null, array $config = array())
     {
         $this->form = $form;
         $this->config = $config;
@@ -69,7 +69,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      * @param  Request                                    $request
      * @return \SRIO\RestUploadBundle\Upload\UploadResult
      */
-    abstract public function handleRequest (Request $request);
+    abstract public function handleRequest(Request $request);
 
     /**
      * Create the form data that the form will be able to handle.

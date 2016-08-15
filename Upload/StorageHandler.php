@@ -33,7 +33,7 @@ class StorageHandler
      * @param  array         $metadataMap
      * @return UploadedFile
      */
-    public function store (UploadContext $context, $contents, array $metadataMap = array())
+    public function store(UploadContext $context, $contents, array $metadataMap = array())
     {
         return $this->getStorage($context)->store($context, $contents, $metadataMap);
     }

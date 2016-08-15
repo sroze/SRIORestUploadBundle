@@ -100,7 +100,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      * @param  array                                                     $headers
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      */
-    protected function checkHeaders (Request $request, array $headers = array())
+    protected function checkHeaders(Request $request, array $headers = array())
     {
         list($contentType) = $this->parseContentTypeAndBoundary($request);
 

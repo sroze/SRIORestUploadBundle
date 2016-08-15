@@ -1,5 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Model;
+
 use SRIO\RestUploadBundle\Storage\UploadedFile;
 
 /**
@@ -14,5 +15,5 @@ interface UploadableFileInterface
      *
      * @param UploadedFile $file
      */
-    public function setFile (UploadedFile $file);
+    public function setFile(UploadedFile $file);
 }

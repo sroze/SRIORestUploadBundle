@@ -8,14 +8,14 @@ interface RequestContentHandlerInterface
      *
      * @return string
      */
-    public function gets ();
+    public function gets();
 
     /**
      * Is the end of file.
      *
      * @return boolean
      */
-    public function eof ();
+    public function eof();
 
     /**
      * Get cursor position.

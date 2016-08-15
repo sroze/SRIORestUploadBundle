@@ -1,5 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Voter;
+
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Storage\FileStorage;
 use SRIO\RestUploadBundle\Upload\UploadContext;

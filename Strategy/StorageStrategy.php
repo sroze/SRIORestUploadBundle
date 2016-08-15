@@ -5,5 +5,5 @@ use SRIO\RestUploadBundle\Upload\UploadContext;
 
 interface StorageStrategy
 {
-    public function getDirectory (UploadContext $context, $fileName);
+    public function getDirectory(UploadContext $context, $fileName);
 }

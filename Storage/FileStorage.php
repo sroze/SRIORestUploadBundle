@@ -57,7 +57,7 @@ class FileStorage
      * @param  array         $metadataMap
      * @return UploadedFile
      */
-    public function store (UploadContext $context, $content, array $metadataMap = array())
+    public function store(UploadContext $context, $content, array $metadataMap = array())
     {
         $name = $this->namingStrategy->getName($context);
         $directory = $this->storageStrategy->getDirectory($context, $name);

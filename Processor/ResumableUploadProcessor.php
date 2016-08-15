@@ -218,7 +218,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
             if (($bytes = $writer->write($handler->gets())) !== false) {
                 $wrote += $bytes;
             } else {
-                throw new UploadProcessorException('Unable to wrote to file');
+                throw new UploadProcessorException('Unable to write to file');
             }
         }
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace SRIO\RestUploadBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
