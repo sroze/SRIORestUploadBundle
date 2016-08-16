@@ -46,4 +46,5 @@ class FlysystemFileAdapter implements FileAdapterInterface
     {
         return $this->file;
     }
+
 }

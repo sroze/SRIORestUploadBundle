@@ -16,7 +16,7 @@ class FormDataUploadProcessor extends SimpleUploadProcessor
     /**
      * {@inheritDoc}
      */
-    public function handleUpload (Request $request, FormInterface $form = null, array $config = array())
+    public function handleUpload(Request $request, FormInterface $form = null, array $config = array())
     {
         $config = array_merge(array(
             self::KEY_FIELD_FILE => 'file',
@@ -76,7 +76,9 @@ class FormDataUploadProcessor extends SimpleUploadProcessor
         $uploadedFile = $request->files->get($this->config[self::KEY_FIELD_FILE]);
         $contents = file_get_contents($uploadedFile->getPathname());
         $file = $this->storageHandler->store($response, $contents, array(
-            FileStorage::METADATA_CONTENT_TYPE => $uploadedFile->getMimeType()
+            'metadata' => array(
+                FileStorage::METADATA_CONTENT_TYPE => $uploadedFile->getMimeType()
+            )
         ));
 
         $response->setFile($file);

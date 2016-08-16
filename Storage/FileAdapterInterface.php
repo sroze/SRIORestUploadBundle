@@ -23,7 +23,7 @@ interface FileAdapterInterface
      * @return string path
      */
     public function getName();
-    
+
     /**
      * Returns the underlying file instance for processing by specialized code.
      *

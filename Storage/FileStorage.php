@@ -1,10 +1,6 @@
 <?php
 namespace SRIO\RestUploadBundle\Storage;
 
-use Gaufrette\Adapter\MetadataSupporter;
-use Gaufrette\File;
-use Gaufrette\Filesystem;
-
 use SRIO\RestUploadBundle\Strategy\NamingStrategy;
 use SRIO\RestUploadBundle\Strategy\StorageStrategy;
 use SRIO\RestUploadBundle\Upload\UploadContext;
@@ -19,7 +15,7 @@ class FileStorage
     protected $name;
 
     /**
-     * @var \Gaufrette\Filesystem
+     * @var FilesystemAdapterInterface
      */
     protected $filesystem;
 
@@ -36,12 +32,12 @@ class FileStorage
     /**
      * Constructor.
      *
-     * @param $name
-     * @param Filesystem      $filesystem
-     * @param StorageStrategy $storageStrategy
-     * @param NamingStrategy  $namingStrategy
+     * @param                                 $name
+     * @param FilesystemAdapterInterface      $filesystem
+     * @param StorageStrategy                 $storageStrategy
+     * @param NamingStrategy                  $namingStrategy
      */
-    public function __construct($name, Filesystem $filesystem, StorageStrategy $storageStrategy, NamingStrategy $namingStrategy)
+    public function __construct($name, FilesystemAdapterInterface $filesystem, StorageStrategy $storageStrategy, NamingStrategy $namingStrategy)
     {
         $this->name = $name;
         $this->filesystem = $filesystem;
@@ -50,86 +46,72 @@ class FileStorage
     }
 
     /**
-     * Store a file content.
+     * Store a file's content.
      *
      * @param  UploadContext $context
-     * @param $content
-     * @param  array         $metadataMap
+     * @param  string        $content
+     * @param  array         $config
+     * @param  bool          $overwrite
+     * 
      * @return UploadedFile
      */
-    public function store(UploadContext $context, $content, array $metadataMap = array())
+    public function store(UploadContext $context, $content, array $config = array(), $overwrite = false)
     {
-        $name = $this->namingStrategy->getName($context);
-        $directory = $this->storageStrategy->getDirectory($context, $name);
-        $path = $directory.'/'.$name;
-
-        $adapter = $this->filesystem->getAdapter();
-        if ($adapter instanceof MetadataSupporter) {
-            $adapter->setMetadata($path, $this->resolveMetadataMap($context, $metadataMap));
+        $path = $this->getFilePathFromContext($context);
+        if ($overwrite === true) {
+            $this->filesystem->put($path, $content, $config);    
+        } else {
+            $this->filesystem->write($path, $content, $config);
         }
-        $this->filesystem->write($path, $content);
-
         $file = $this->filesystem->get($path);
 
         return new UploadedFile($this, $file);
     }
 
     /**
-     * Resolve the metadata map.
+     * Store a file's content.
      *
      * @param  UploadContext $context
-     * @param  array         $metadataMap
-     * @return array
+     * @param  resource      $resource
+     * @param  array         $config
+     * @param  bool          $overwrite
+     * 
+     * @return UploadedFile
      */
-    protected function resolveMetadataMap(UploadContext $context, array $metadataMap)
+    public function storeStream(UploadContext $context, $resource, array $config = array(), $overwrite = false)
     {
-        $allowedMetadataKeys = array(self::METADATA_CONTENT_TYPE);
-        $map = array();
-
-        foreach ($allowedMetadataKeys as $key) {
-            if (array_key_exists($key, $metadataMap)) {
-                $map[$key] = $metadataMap[$key];
-            }
+        $path = $this->getFilePathFromContext($context);
+        if ($overwrite === true) {
+            $this->filesystem->putStream($path, $resource, $config);    
+        } else {
+            $this->filesystem->writeStream($path, $resource, $config);
         }
+        $file = $this->filesystem->get($path);
 
-        return $map;
+        return new UploadedFile($this, $file);
     }
 
     /**
-     * Get file size.
+     * Get or creates a file path from UploadContext
      *
-     * @param $name
-     * @return int
+     * @param  UploadContext $context
+     * @return string
      */
-    public function size($name)
+    protected function getFilePathFromContext(UploadContext $context)
     {
-        return $this->filesystem->size($name);
+        if($context->getFile() != null) {
+            return $context->getFile()->getFile()->getName();
+        }
+        
+        $name = $this->namingStrategy->getName($context);
+        $directory = $this->storageStrategy->getDirectory($context, $name);
+        $path = $directory.'/'.$name;
+        
+        return $path;
     }
-
+    
     /**
-     * Get file.
-     *
-     * @param $name
-     * @return FileAdapterInterface
-     */
-    public function get($name)
-    {
-        return $this->filesystem->get($name);
-    }
-
-    /**
-     * Get a stream from file.
-     *
-     * @param $name
-     * @return \Gaufrette\Stream|\Gaufrette\Stream\InMemoryBuffer
-     */
-    public function getStream($name)
-    {
-        return $this->filesystem->createStream($name);
-    }
-
-    /**
-     * @return \Gaufrette\Filesystem
+     * @return FilesystemAdapterInterface
      */
     public function getFilesystem()
     {
@@ -145,7 +127,7 @@ class FileStorage
     }
 
     /**
-     * @return \Doctrine\ORM\Mapping\NamingStrategy
+     * @return NamingStrategy
      */
     public function getNamingStrategy()
     {
@@ -153,7 +135,7 @@ class FileStorage
     }
 
     /**
-     * @return \SRIO\RestUploadBundle\Strategy\StorageStrategy
+     * @return StorageStrategy
      */
     public function getStorageStrategy()
     {

@@ -59,7 +59,7 @@ class Media implements UploadableFileInterface
         $this->size = $uploaded->getFile()->getSize();
 
         // TODO Add mimetype on `UploadedFile`
-        $this->mimeType = $uploaded->getStorage()->getFilesystem()->mimeType($this->path);
+        $this->mimeType = $uploaded->getStorage()->getFilesystem()->getMimeType($this->path);
 
         // TODO Add original name
         $this->originalName = $uploaded->getFile()->getName();

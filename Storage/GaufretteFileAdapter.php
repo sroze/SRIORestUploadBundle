@@ -5,7 +5,6 @@ use Gaufrette\File;
 
 class GaufretteFileAdapter implements FileAdapterInterface
 {
-
     /**
      * @var File
      */
@@ -39,7 +38,7 @@ class GaufretteFileAdapter implements FileAdapterInterface
     {
         return $this->file->getKey();
     }
-    
+
     /**
      * @inheritdoc
      */

@@ -40,7 +40,9 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
             list($contentType, $content) = $this->getContent($request);
 
             $file = $this->storageHandler->store($result, $content, array(
-                FileStorage::METADATA_CONTENT_TYPE => $contentType
+                'metadata' => array(
+                    FileStorage::METADATA_CONTENT_TYPE => $contentType
+                )
             ));
 
             $result->setFile($file);

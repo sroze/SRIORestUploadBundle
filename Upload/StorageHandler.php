@@ -2,8 +2,8 @@
 namespace SRIO\RestUploadBundle\Upload;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
-use SRIO\RestUploadBundle\Storage\FileAdapterInterface;
 use SRIO\RestUploadBundle\Storage\FileStorage;
+use SRIO\RestUploadBundle\Storage\FilesystemAdapterInterface;
 use SRIO\RestUploadBundle\Storage\UploadedFile;
 use SRIO\RestUploadBundle\Voter\StorageVoter;
 
@@ -29,52 +29,43 @@ class StorageHandler
     }
 
     /**
+     * Store a file's content.
+     *
      * @param  UploadContext $context
-     * @param $contents
-     * @param  array         $metadataMap
+     * @param  string        $content
+     * @param  array         $config
+     * @param  bool          $overwrite
+     *
      * @return UploadedFile
      */
-    public function store(UploadContext $context, $contents, array $metadataMap = array())
+    public function store(UploadContext $context, $contents, array $config = array(), $overwrite = false)
     {
-        return $this->getStorage($context)->store($context, $contents, $metadataMap);
+        return $this->getStorage($context)->store($context, $contents, $config, $overwrite);
     }
 
     /**
-     * Get file size.
+     * Store a file's content.
      *
      * @param  UploadContext $context
-     * @param $name
-     * @return int
+     * @param  resource      $resource
+     * @param  array         $config
+     * @param  bool          $overwrite
+     *
+     * @return UploadedFile
      */
-    public function size(UploadContext $context, $name)
+    public function storeStream(UploadContext $context, $resource, array $config = array(), $overwrite = false)
     {
-        return $this->getStorage($context)->size($name);
+        return $this->getStorage($context)->storeStream($context, $resource, $config, $overwrite);
     }
 
     /**
-     * Get file.
-     *
-     * @param  UploadContext   $context
-     * @param $name
-     * @return FileAdapterInterface
+     * @return FilesystemAdapterInterface
      */
-    public function get(UploadContext $context, $name)
+    public function getFilesystem(UploadContext $context)
     {
-        return $this->getStorage($context)->get($name);
+        return $this->getStorage($context)->getFilesystem();
     }
-
-    /**
-     * Get a stream for that file.
-     *
-     * @param  UploadContext                                      $context
-     * @param $name
-     * @return mixed
-     */
-    public function getStream(UploadContext $context, $name)
-    {
-        return $this->getStorage($context)->getStream($name);
-    }
-
+    
     /**
      * Get storage by upload context.
      *

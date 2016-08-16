@@ -124,7 +124,9 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
 
             // Create file from storage handler
             $file = $this->storageHandler->store($result, '', array(
-                FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('X-Upload-Content-Type')
+                'metadata' => array(
+                    FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('X-Upload-Content-Type')
+                )
             ));
 
             /** @var $resumableUpload ResumableUploadSession */
@@ -165,10 +167,16 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
      */
     protected function handleResume(Request $request, ResumableUploadSession $uploadSession)
     {
-        $filePath = $uploadSession->getFilePath();
+        $filePath = $uploadSession->getFilePath();         
+        
         $context = new UploadContext();
         $context->setStorageName($uploadSession->getStorageName());
-
+        $file = $this->storageHandler->getFilesystem($context)->get($filePath);
+        $context->setFile(new UploadedFile(
+            $this->storageHandler->getStorage($context),
+            $file
+        ));
+        
         $contentLength = $request->headers->get('Content-Length');
         if ($request->headers->has('Content-Range')) {
             $range = $this->parseContentRange($request->headers->get('Content-Range'));
@@ -181,7 +189,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
                 ));
             } elseif ($range['start'] === '*') {
                 if ($contentLength == 0) {
-                    $file = $this->storageHandler->get($context, $filePath);
+                    $file = $this->storageHandler->getFilesystem($context)->get($filePath);
 
                     return $this->requestUploadStatus($context, $uploadSession, $file, $range);
                 }
@@ -189,7 +197,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
                 throw new UploadProcessorException('Content-Length must be 0 if asking upload status');
             }
 
-            $uploaded = $this->storageHandler->size($context, $filePath);
+            $uploaded = $this->storageHandler->getFilesystem($context)->getSize($filePath);
             if ($range['start'] != $uploaded) {
                 throw new UploadProcessorException(sprintf(
                     'Unable to start at %d while uploaded is %d',
@@ -207,27 +215,29 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
 
         // Handle upload from
         $handler = $this->getRequestContentHandler($request);
-        $writer = $this->storageHandler->getStream($context, $filePath);
-        if ($writer->open(new StreamMode('c')) !== true) {
-            throw new UploadProcessorException('Unable to open stream');
-        }
+        $stream = $this->storageHandler->getFilesystem($context)->getStreamCopy($filePath);
 
-        $writer->seek($range['start']);
+        fseek($stream, $range['start']);
         $wrote = 0;
         while (!$handler->eof()) {
-            if (($bytes = $writer->write($handler->gets())) !== false) {
+            if (($bytes = fwrite($stream, $handler->gets())) !== false) {
                 $wrote += $bytes;
             } else {
                 throw new UploadProcessorException('Unable to write to file');
             }
         }
 
-        $writer->close();
-
         // Get file in context and its size
-        $file = $this->storageHandler->get($context, $filePath);
-        $size = $file->getSize();
+        $uploadedFile = $this->storageHandler->storeStream($context, $stream, array(
+            'metadata' => array(
+                FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('X-Upload-Content-Type')    
+            )
+        ), true);
+        fclose($stream);
 
+        $file = $uploadedFile->getFile();
+        $size = $file->getSize();
+        
         // If upload is completed, create the upload file, else
         // return like the request upload status
         if ($size < $uploadSession->getContentLength()) {
@@ -235,7 +245,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
         } elseif ($size == $uploadSession->getContentLength()) {
             return $this->handleCompletedUpload($context, $uploadSession, $file);
         } else {
-            throw new UploadProcessorException('Wrote file size is greater that expected Content-Length');
+            throw new UploadProcessorException('Written file size is greater that expected Content-Length');
         }
     }
 
@@ -339,7 +349,7 @@ class ResumableUploadProcessor extends AbstractUploadProcessor
         } elseif ($range['start'] > $range['end']) {
             throw new UploadProcessorException('Content-Range start must be lower than end');
         } elseif ($range['end'] > $range['total']) {
-            throw new UploadProcessorException('Content-Range end must be lower or equals to total length');
+            throw new UploadProcessorException('Content-Range end must be lower or equal to total length');
         }
 
         return $range;

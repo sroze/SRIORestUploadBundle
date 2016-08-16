@@ -40,7 +40,9 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
             }
 
             $file = $this->storageHandler->store($result, $content, array(
-                FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('Content-Type')
+                'metadata' => array(
+                    FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('Content-Type')
+                )
             ));
 
             $result->setFile($file);

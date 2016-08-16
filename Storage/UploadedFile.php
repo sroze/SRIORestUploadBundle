@@ -24,7 +24,7 @@ class UploadedFile
     }
 
     /**
-     * @return mixed
+     * @return FileAdapterInterface
      */
     public function getFile()
     {
