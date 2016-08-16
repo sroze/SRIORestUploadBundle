@@ -35,6 +35,7 @@ class SRIORestUploadExtension extends Extension
         $loader->load('processors.xml');
         $loader->load('handlers.xml');
         $loader->load('strategy.xml');
+        $loader->load('storage.xml');
 
         $this->createStorageServices($container, $config['storages']);
     }
