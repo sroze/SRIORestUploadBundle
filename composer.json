@@ -33,5 +33,12 @@
     "autoload": {
         "psr-0": { "SRIO\\RestUploadBundle": "" }
     },
+    "scripts": {
+        "test": "./test.sh",
+        "contrib": [
+            "php-cs-fixer fix .",
+            "./test.sh"
+        ]
+    },
     "target-dir": "SRIO/RestUploadBundle"
 }

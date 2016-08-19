@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export TEST_ENV="Gaufrette"
+export TEST_FILESYSTEM="Gaufrette"
 vendor/bin/phpunit
 
-export TEST_ENV="Flysystem"
+export TEST_FILESYSTEM="Flysystem"
 vendor/bin/phpunit

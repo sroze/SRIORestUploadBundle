@@ -10,7 +10,7 @@ $loader = require $loaderFile;
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
-$testEnv = isset($_SERVER['TEST_ENV']) ? $_SERVER['TEST_ENV'] : 'gaufrette';
+$testEnv = isset($_SERVER['TEST_FILESYSTEM']) ? $_SERVER['TEST_FILESYSTEM'] : 'gaufrette';
 $message = "Currently testing filesystem layer: \"$testEnv\" (options: Gaufrette, Flysystem. see 'test.sh' script)";
 if (PHP_SAPI === 'cli') {
     echo "\e[48;5;202m$message\e[49m\r\n\r\n";
