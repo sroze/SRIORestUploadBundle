@@ -150,11 +150,10 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
             $this->filesystem->read($path);
             return true;
         } catch (FileNotFound $ex) {
-            $this->throwFileNotFoundException($path, $ex);   
+            throw $this->createFileNotFoundException($path, $ex);
         } catch (\RuntimeException $ex) {
             return false;
         }
-        return false;
     }
 
     /**
@@ -163,8 +162,8 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     public function readStream($path)
     {
         if (!$this->filesystem->has($path)) {
-            $this->throwFileNotFoundException($path);
-        }          
+            throw $this->createFileNotFoundException($path);
+        }
 
         // If castable to a real stream (local filesystem for instance) use that stream.
         $streamWrapper = $this->filesystem->createStream($path);
@@ -188,7 +187,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     public function getStreamCopy($path)
     {
         if (!$this->filesystem->has($path)) {
-            $this->throwFileNotFoundException($path);
+            throw $this->createFileNotFoundException($path);
         }
 
         // If castable to a real stream (local filesystem for instance) use that stream.
@@ -220,7 +219,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->delete($path);
         } catch (FileNotFound $ex) {
-            $this->throwFileNotFoundException($path, $ex);
+            throw $this->createFileNotFoundException($path, $ex);
         }
     }
 
@@ -232,7 +231,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->mtime($path);
         } catch (FileNotFound $ex) {
-            $this->throwFileNotFoundException($path, $ex);
+            throw $this->createFileNotFoundException($path, $ex);
         }
     }
 
@@ -244,7 +243,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->size($path);
         } catch (FileNotFound $ex) {
-            $this->throwFileNotFoundException($path, $ex);
+            throw $this->createFileNotFoundException($path, $ex);
         }
     }
 
@@ -256,23 +255,25 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->mimeType($path);
         } catch (FileNotFound $ex) {
-            $this->throwFileNotFoundException($path, $ex);
+            throw $this->createFileNotFoundException($path, $ex);
         }
     }
-    
-    protected function throwFileNotFoundException($path, $previousEx = null)
+
+    protected function createFileNotFoundException($path, $previousEx = null)
     {
         if ($previousEx === null) {
             $previousEx = new FileNotFound($path);
-        } 
-        throw new WrappingFileNotFoundException($previousEx->getMessage(), $previousEx->getCode(), $previousEx);
+        }
+
+        return new WrappingFileNotFoundException($previousEx->getMessage(), $previousEx->getCode(), $previousEx);
     }
 
-    protected function throwFileExistsException($path, $previousEx = null)
+    protected function createFileExistsException($path, $previousEx = null)
     {
         if ($previousEx === null) {
             $previousEx = new FileAlreadyExists($path);
         }
-        throw new WrappingFileExistsException($previousEx->getMessage(), $previousEx->getCode(), $previousEx);
+
+        return new WrappingFileExistsException($previousEx->getMessage(), $previousEx->getCode(), $previousEx);
     }
 }

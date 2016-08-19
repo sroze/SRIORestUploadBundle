@@ -61,7 +61,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->write($path, $content, $config);
         } catch (FileExistsException $ex) {
-            $this->throwFileExistsException($path, $ex);
+            throw  $this->createFileExistsException($path, $ex);
         }
     }
     
@@ -73,7 +73,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->writeStream($path, $resource, $config);
         } catch (FileExistsException $ex) {
-            $this->throwFileExistsException($path, $ex);
+            throw $this->createFileExistsException($path, $ex);
         }
     }
 
@@ -101,7 +101,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->read($path);
         } catch (FileNotFoundException $ex) {
-            $this->throwFileNotFoundException($path, $ex);
+            throw $this->createFileNotFoundException($path, $ex);
         }
     }
 
@@ -113,7 +113,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->readStream($path);
         } catch (FileNotFoundException $ex) {
-            $this->throwFileNotFoundException($path, $ex);
+            throw $this->createFileNotFoundException($path, $ex);
         }
     }
     
@@ -125,7 +125,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
         try {
             return $this->filesystem->delete($path);
         } catch (FileNotFoundException $ex) {
-            $this->throwFileNotFoundException($path, $ex);
+            throw $this->createFileNotFoundException($path, $ex);
         }
     }
 
@@ -152,7 +152,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     public function getModifiedTimestamp($path)
     {
         if (false === $timestamp = $this->filesystem->getTimestamp($path)) {
-            $this->throwFileNotFoundException($path);
+            throw $this->createFileNotFoundException($path);
         }
 
         return $timestamp;
@@ -164,7 +164,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     public function getSize($path)
     {
         if (false === $size = $this->filesystem->getSize($path)) {
-            $this->throwFileNotFoundException($path);
+            throw $this->createFileNotFoundException($path);
         }
         
         return $size;
@@ -176,25 +176,27 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     public function getMimeType($path)
     {
         if (false === $mimeType = $this->filesystem->getMimetype($path)) {
-            $this->throwFileNotFoundException($path);
+            throw $this->createFileNotFoundException($path);
         }
         
         return $mimeType;
     }
-    
-    protected function throwFileNotFoundException($path, $previousEx = null)
+
+    protected function createFileNotFoundException($path, $previousEx = null)
     {
         if ($previousEx === null) {
             $previousEx = new FileNotFoundException($path);
         }
-        throw new WrappingFileNotFoundException($previousEx->getMessage(), $previousEx->getCode(), $previousEx);
+
+        return new WrappingFileNotFoundException($previousEx->getMessage(), $previousEx->getCode(), $previousEx);
     }
 
-    protected function throwFileExistsException($path, $previousEx = null)
+    protected function createFileExistsException($path, $previousEx = null)
     {
         if ($previousEx === null) {
             $previousEx = new FileExistsException($path);
         }
-        throw new WrappingFileExistsException($previousEx->getMessage(), $previousEx->getCode(), $previousEx);
+
+        return new WrappingFileExistsException($previousEx->getMessage(), $previousEx->getCode(), $previousEx);
     }
 }
