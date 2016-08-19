@@ -60,7 +60,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
 
     protected function startSession()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $content = $this->getResource($client, 'apple.gif');
         $parameters = array('name' => 'test');
         $json = json_encode($parameters);

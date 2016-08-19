@@ -53,11 +53,16 @@ knp_gaufrette:
         test:
             adapter: test
 
+oneup_flysystem:
+    adapters:
+        test:
+            local:
+                directory: %kernel.root_dir%/../web/uploads
+    filesystems:
+        test:
+            adapter: test
+
 # RestUploadBundle configuration
 srio_rest_upload:
-    storages:
-        default:
-            filesystem: gaufrette.test_filesystem
-
     upload_type_parameter: uploadType
     resumable_entity_class: SRIO\RestUploadBundle\Tests\Fixtures\Entity\ResumableUploadSession

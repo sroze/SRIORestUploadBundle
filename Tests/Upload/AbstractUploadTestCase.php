@@ -61,4 +61,19 @@ abstract class AbstractUploadTestCase extends WebTestCase
     {
         return $client->getContainer()->getParameter('kernel.root_dir').'/../../Resources/'.$name;
     }
+
+    /**
+     * Creates a Client.
+     *
+     * @param array $options An array of options to pass to the createKernel class
+     * @param array $server  An array of server parameters
+     *
+     * @return Client A Client instance
+     */
+    protected function getNewClient(array $options = array(), array $server = array())
+    {
+        $options = array_merge(array('environment' => isset($_SERVER['TEST_ENV']) ? strtolower($_SERVER['TEST_ENV']) : 'gaufrette'), $options);
+        
+        return static::createClient($options, $server);
+    }
 }

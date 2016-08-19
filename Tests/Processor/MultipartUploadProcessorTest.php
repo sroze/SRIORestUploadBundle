@@ -8,7 +8,7 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
 {
     public function testGetPartsString()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $image = $this->getResource($client, 'apple.gif');
         $data = array('test' => 'OK');
         $jsonData = json_encode($data);
@@ -33,7 +33,7 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
 
     public function testGetPartsResource()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $image = $this->getResource($client, 'apple.gif');
         $data = array('test' => 'OK');
         $jsonData = json_encode($data);

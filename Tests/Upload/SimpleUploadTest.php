@@ -5,7 +5,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
 {
     public function testWithEmptyContentTypeHeaderSimpleUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('uploadType' => 'simple', 'name' => 'test');
 
         $content = $this->getResource($client, 'apple.gif');
@@ -19,7 +19,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
 
     public function testWithoutFormSimpleUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('uploadType' => 'simple');
         $content = $this->getResource($client, 'apple.gif');
         $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array(
@@ -33,7 +33,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
 
     public function testWithoutContentSimpleUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('uploadType' => 'simple', 'name' => 'test');
         $client->request('POST', '/upload?'.http_build_query($queryParameters));
 
@@ -43,7 +43,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
 
     public function testSimpleUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('uploadType' => 'simple', 'name' => 'test');
 
         $content = $this->getResource($client, 'apple.gif');

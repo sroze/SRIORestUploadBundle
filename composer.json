@@ -14,20 +14,21 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": ">=2.3.0",
-        "incenteev/composer-parameter-handler": "~2.0",
-        "knplabs/knp-gaufrette-bundle": ">=0.1.7",
-        "knplabs/gaufrette": ">=0.1.7",
-        "oneup/flysystem-bundle": "^1.4"
+        "incenteev/composer-parameter-handler": "~2.0"
     },
     "require-dev": {
         "sensio/framework-extra-bundle": ">=2.3.0",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": ">=1.2.0",
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "3.7.*",
+        "knplabs/knp-gaufrette-bundle": ">=0.1.7",
+        "oneup/flysystem-bundle": "~1.4"
     },
     "suggest": {
         "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "doctrine/doctrine-bundle": ">=1.2.0"
+        "doctrine/doctrine-bundle": ">=1.2.0",
+        "knplabs/knp-gaufrette-bundle": "Required if you use the knplabs/gaufrette filesystem abstraction layer",
+        "oneup/flysystem-bundle": "Required if you use the league/flysystem filesystem abstraction layer"
     },
     "autoload": {
         "psr-0": { "SRIO\\RestUploadBundle": "" }

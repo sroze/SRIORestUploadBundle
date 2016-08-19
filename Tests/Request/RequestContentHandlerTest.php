@@ -8,7 +8,7 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
 {
     public function testBinaryStringContent()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $filePath = $this->getResourcePath($client, 'apple.gif');
         $content = file_get_contents($filePath);
 
@@ -17,7 +17,7 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
 
     public function testBinaryResourceContent()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $filePath = $this->getResourcePath($client, 'apple.gif');
         $content = fopen($filePath, 'r');
         $expectedContent = file_get_contents($filePath);
@@ -27,7 +27,7 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
 
     public function testStringContent()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $filePath = $this->getResourcePath($client, 'lorem.txt');
         $content = file_get_contents($filePath);
 
@@ -36,7 +36,7 @@ class RequestContentHandlerTest extends AbstractUploadTestCase
 
     public function testStringResourceContent()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $filePath = $this->getResourcePath($client, 'lorem.txt');
         $content = fopen($filePath, 'r');
         $expectedContent = file_get_contents($filePath);

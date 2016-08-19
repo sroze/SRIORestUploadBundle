@@ -14,6 +14,8 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
 
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
+            new Oneup\FlysystemBundle\OneupFlysystemBundle(),
+
             new SRIO\RestUploadBundle\SRIORestUploadBundle(),
         );
     }
