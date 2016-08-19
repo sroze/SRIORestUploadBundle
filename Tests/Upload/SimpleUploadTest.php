@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
 class SimpleUploadTest extends AbstractUploadTestCase
@@ -24,7 +25,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
         $content = $this->getResource($client, 'apple.gif');
         $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array(
             'CONTENT_TYPE' => 'image/gif',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ));
 
         $response = $client->getResponse();
@@ -49,7 +50,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
         $content = $this->getResource($client, 'apple.gif');
         $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array(
             'CONTENT_TYPE' => 'image/gif',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
 
         $response = $client->getResponse();

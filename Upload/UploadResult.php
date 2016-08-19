@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Upload;
 
 class UploadResult extends UploadContext

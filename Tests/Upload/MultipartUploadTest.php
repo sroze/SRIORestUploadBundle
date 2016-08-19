@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
 class MultipartUploadTest extends AbstractUploadTestCase
@@ -14,7 +15,7 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
             'CONTENT_TYPE' => 'multipart/related; boundary="'.$boundary.'"',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
         $this->assertResponseHasErrors($client);
     }
@@ -47,7 +48,7 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
             'CONTENT_TYPE' => 'multipart/related',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
         $this->assertResponseHasErrors($client);
     }
@@ -65,7 +66,7 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
             'CONTENT_TYPE' => 'multipart/related; boundary="'.$boundary.'"',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
         $this->assertResponseHasErrors($client);
     }
@@ -83,7 +84,7 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
             'CONTENT_TYPE' => 'multipart/related; boundary="'.$boundary.'"',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
 
         $response = $client->getResponse();

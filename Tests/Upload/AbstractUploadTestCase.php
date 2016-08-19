@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -20,9 +21,11 @@ abstract class AbstractUploadTestCase extends WebTestCase
     /**
      * Get content of a resource.
      *
-     * @param  Client            $client
+     * @param Client $client
      * @param $name
+     *
      * @return string
+     *
      * @throws \RuntimeException
      */
     protected function getResource(Client $client, $name)
@@ -41,8 +44,9 @@ abstract class AbstractUploadTestCase extends WebTestCase
     /**
      * Get uploaded file path.
      *
-     * @param  Client $client
+     * @param Client $client
      * @param $name
+     *
      * @return string
      */
     protected function getUploadedFilePath(Client $client)
@@ -53,8 +57,9 @@ abstract class AbstractUploadTestCase extends WebTestCase
     /**
      * Get resource path.
      *
-     * @param  Client $client
+     * @param Client $client
      * @param $name
+     *
      * @return string
      */
     protected function getResourcePath(Client $client, $name)
@@ -73,7 +78,7 @@ abstract class AbstractUploadTestCase extends WebTestCase
     protected function getNewClient(array $options = array(), array $server = array())
     {
         $options = array_merge(array('environment' => isset($_SERVER['TEST_FILESYSTEM']) ? strtolower($_SERVER['TEST_FILESYSTEM']) : 'gaufrette'), $options);
-        
+
         return static::createClient($options, $server);
     }
 }

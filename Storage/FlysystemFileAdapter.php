@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Storage;
 
 use League\Flysystem\File;
@@ -16,7 +17,7 @@ class FlysystemFileAdapter implements FileAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function exists()
     {
@@ -24,7 +25,7 @@ class FlysystemFileAdapter implements FileAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSize()
     {
@@ -32,19 +33,18 @@ class FlysystemFileAdapter implements FileAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName()
     {
         return $this->file->getPath();
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFile()
     {
         return $this->file;
     }
-
 }

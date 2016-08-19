@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Storage;
 
 use Gaufrette\Adapter\MetadataSupporter;
@@ -11,7 +12,6 @@ use SRIO\RestUploadBundle\Exception\FileNotFoundException as WrappingFileNotFoun
 
 class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
 {
-
     /**
      * @var Filesystem
      */
@@ -23,7 +23,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFilesystem()
     {
@@ -31,7 +31,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAdapter()
     {
@@ -39,7 +39,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function has($path)
     {
@@ -47,7 +47,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function get($path)
     {
@@ -55,25 +55,25 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function write($path, $content, array $config = array())
     {
         return $this->writeContents($path, $content, $config, false);
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function writeStream($path, $resource, array $config = array())
     {
         // This is not ideal, stream_get_contents will read the full stream into memory before we can
         // flow it into the write function. Watch out with big files and Gaufrette!
-        return $this->writeContents($path, stream_get_contents($resource, -1 ,0), $config, false);
+        return $this->writeContents($path, stream_get_contents($resource, -1, 0), $config, false);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function put($path, $content, array $config = array())
     {
@@ -81,13 +81,13 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function putStream($path, $resource, array $config = array())
     {
         // This is not ideal, stream_get_contents will read the full stream into memory before we can
         // flow it into the write function. Watch out with big files and Gaufrette!
-        return $this->writeContents($path, stream_get_contents($resource, -1 ,0), $config, true);
+        return $this->writeContents($path, stream_get_contents($resource, -1, 0), $config, true);
     }
 
     /**
@@ -115,17 +115,19 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
 
         try {
             $this->filesystem->write($path, $content, $overwrite);
+
             return true;
         } catch (\RuntimeException $ex) {
             return false;
         }
     }
-    
+
     /**
      * Resolve the metadata map.
      *
-     * @param  array $allowedMetadataKeys
-     * @param  array $metadataMap
+     * @param array $allowedMetadataKeys
+     * @param array $metadataMap
+     *
      * @return array
      */
     protected function resolveMetadataMap(array $allowedMetadataKeys, array $metadataMap)
@@ -142,12 +144,13 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function read($path)
     {
         try {
             $this->filesystem->read($path);
+
             return true;
         } catch (FileNotFound $ex) {
             throw $this->createFileNotFoundException($path, $ex);
@@ -157,7 +160,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function readStream($path)
     {
@@ -173,16 +176,16 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
         if ($stream === false) {
             // This is not ideal, read will first read the full file into memory before we can
             // flow it into the temp stream. Watch out with big files and Gaufrette!
-            $stream = fopen('php://temp','w+b');
+            $stream = fopen('php://temp', 'w+b');
             fwrite($stream, $this->read($path));
             rewind($stream);
         }
-        
+
         return $stream;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getStreamCopy($path)
     {
@@ -208,11 +211,12 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
         }
 
         rewind($streamCopy);
+
         return $streamCopy;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function delete($path)
     {
@@ -224,7 +228,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getModifiedTimestamp($path)
     {
@@ -236,7 +240,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSize($path)
     {
@@ -248,7 +252,7 @@ class GaufretteFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMimeType($path)
     {

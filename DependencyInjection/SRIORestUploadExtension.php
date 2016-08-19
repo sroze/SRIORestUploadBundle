@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -7,18 +8,17 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-
 use SRIO\RestUploadBundle\DependencyInjection\Factory\StorageFactory;
 
 /**
- * This is the class that loads and manages your bundle configuration
+ * This is the class that loads and manages your bundle configuration.
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
 class SRIORestUploadExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -60,10 +60,11 @@ class SRIORestUploadExtension extends Extension
     /**
      * Create a single storage service.
      *
-     * @param  StorageFactory   $factory
-     * @param  ContainerBuilder $containerBuilder
+     * @param StorageFactory   $factory
+     * @param ContainerBuilder $containerBuilder
      * @param $name
-     * @param  array            $config
+     * @param array $config
+     *
      * @return string
      */
     private function createStorage(StorageFactory $factory, ContainerBuilder $containerBuilder, $name, array $config)

@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Upload\Processor;
 
 use SRIO\RestUploadBundle\Tests\Upload\AbstractUploadTestCase;

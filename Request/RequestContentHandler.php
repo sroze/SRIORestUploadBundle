@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Request;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +12,7 @@ class RequestContentHandler implements RequestContentHandlerInterface
     protected $request;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $cursor;
 
@@ -36,7 +37,7 @@ class RequestContentHandler implements RequestContentHandlerInterface
      *
      * If false is return, it's the end of file.
      *
-     * @return string|boolean
+     * @return string|bool
      */
     public function gets()
     {
@@ -85,6 +86,7 @@ class RequestContentHandler implements RequestContentHandlerInterface
      * Get request content.
      *
      * @return resource|string
+     *
      * @throws \RuntimeException
      */
     public function getContent()

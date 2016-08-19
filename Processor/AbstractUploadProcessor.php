@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Processor;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
@@ -6,7 +7,6 @@ use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Model\UploadableFileInterface;
 use SRIO\RestUploadBundle\Request\RequestContentHandler;
 use SRIO\RestUploadBundle\Request\RequestContentHandlerInterface;
-
 use SRIO\RestUploadBundle\Upload\StorageHandler;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -47,10 +47,11 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     /**
      * Constructor.
      *
-     * @param  Request       $request
-     * @param  FormInterface $form
-     * @param  array         $config
-     * @return boolean
+     * @param Request       $request
+     * @param FormInterface $form
+     * @param array         $config
+     *
+     * @return bool
      */
     public function handleUpload(Request $request, FormInterface $form = null, array $config = array())
     {
@@ -66,7 +67,8 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      * This method return a Response object that will be sent back
      * to the client or will be caught by controller.
      *
-     * @param  Request                                    $request
+     * @param Request $request
+     *
      * @return \SRIO\RestUploadBundle\Upload\UploadResult
      */
     abstract public function handleRequest(Request $request);
@@ -77,7 +79,8 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
      * It walk one the form and make an intersection between its keys and
      * provided data.
      *
-     * @param  array $data
+     * @param array $data
+     *
      * @return array
      */
     protected function createFormData(array $data)
@@ -90,7 +93,8 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     /**
      * Get keys of the form.
      *
-     * @param  FormInterface $form
+     * @param FormInterface $form
+     *
      * @return array
      */
     protected function getFormKeys(FormInterface $form)
@@ -106,7 +110,8 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     /**
      * Get a request content handler.
      *
-     * @param  Request                        $request
+     * @param Request $request
+     *
      * @return RequestContentHandlerInterface
      */
     protected function getRequestContentHandler(Request $request)
@@ -121,8 +126,9 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     /**
      * Check that needed headers are here.
      *
-     * @param  Request                                          $request the request
-     * @param  array                                            $headers the headers to check
+     * @param Request $request the request
+     * @param array   $headers the headers to check
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
      */
     protected function checkHeaders(Request $request, array $headers)
@@ -140,8 +146,10 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     /**
      * Set the uploaded file on the form data.
      *
-     * @param  UploadedFile                                              $file
+     * @param UploadedFile $file
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     *
      * @deprecated
      */
     protected function setUploadedFile(UploadedFile $file)

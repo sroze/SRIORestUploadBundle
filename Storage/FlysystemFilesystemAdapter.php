@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Storage;
 
 use League\Flysystem\File;
@@ -6,11 +7,10 @@ use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use SRIO\RestUploadBundle\Exception\FileExistsException as WrappingFileExistsException;
-use SRIO\RestUploadBundle\Exception\FileNotFoundException as WrappingFileNotFoundException;  
+use SRIO\RestUploadBundle\Exception\FileNotFoundException as WrappingFileNotFoundException;
 
 class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
 {
-
     /**
      * @var Filesystem
      */
@@ -22,7 +22,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFilesystem()
     {
@@ -30,7 +30,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getAdapter()
     {
@@ -38,7 +38,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function has($path)
     {
@@ -46,7 +46,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function get($path)
     {
@@ -54,7 +54,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function write($path, $content, array $config = array())
     {
@@ -64,9 +64,9 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
             throw  $this->createFileExistsException($path, $ex);
         }
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function writeStream($path, $resource, array $config = array())
     {
@@ -78,7 +78,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function put($path, $content, array $config = array())
     {
@@ -86,15 +86,15 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function putStream($path, $resource, array $config = array())
     {
         return $this->filesystem->putStream($path, $resource, $config);
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function read($path)
     {
@@ -106,7 +106,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function readStream($path)
     {
@@ -116,9 +116,9 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
             throw $this->createFileNotFoundException($path, $ex);
         }
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function delete($path)
     {
@@ -130,7 +130,7 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getStreamCopy($path)
     {
@@ -139,15 +139,15 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
         // Neatly overflow into a file on disk after more than 10MBs.
         $mbLimit = 10 * 1024 * 1024;
         $streamCopy = fopen("php://temp/maxmemory:$mbLimit", 'w+b');
-        
+
         stream_copy_to_stream($stream, $streamCopy);
         rewind($streamCopy);
-        
+
         return $streamCopy;
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getModifiedTimestamp($path)
     {
@@ -159,26 +159,26 @@ class FlysystemFilesystemAdapter implements FilesystemAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSize($path)
     {
         if (false === $size = $this->filesystem->getSize($path)) {
             throw $this->createFileNotFoundException($path);
         }
-        
+
         return $size;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getMimeType($path)
     {
         if (false === $mimeType = $this->filesystem->getMimetype($path)) {
             throw $this->createFileNotFoundException($path);
         }
-        
+
         return $mimeType;
     }
 

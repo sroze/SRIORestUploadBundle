@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Upload;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
@@ -9,7 +10,6 @@ use SRIO\RestUploadBundle\Voter\StorageVoter;
 
 /**
  * This class defines the storage handler.
- *
  */
 class StorageHandler
 {
@@ -31,10 +31,10 @@ class StorageHandler
     /**
      * Store a file's content.
      *
-     * @param  UploadContext $context
-     * @param  string        $content
-     * @param  array         $config
-     * @param  bool          $overwrite
+     * @param UploadContext $context
+     * @param string        $content
+     * @param array         $config
+     * @param bool          $overwrite
      *
      * @return UploadedFile
      */
@@ -46,10 +46,10 @@ class StorageHandler
     /**
      * Store a file's content.
      *
-     * @param  UploadContext $context
-     * @param  resource      $resource
-     * @param  array         $config
-     * @param  bool          $overwrite
+     * @param UploadContext $context
+     * @param resource      $resource
+     * @param array         $config
+     * @param bool          $overwrite
      *
      * @return UploadedFile
      */
@@ -65,12 +65,14 @@ class StorageHandler
     {
         return $this->getStorage($context)->getFilesystem();
     }
-    
+
     /**
      * Get storage by upload context.
      *
-     * @param  UploadContext                                    $context
+     * @param UploadContext $context
+     *
      * @return FileStorage
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
      */
     public function getStorage(UploadContext $context)

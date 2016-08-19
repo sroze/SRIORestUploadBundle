@@ -1,7 +1,7 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Processor;
 
-use SRIO\RestUploadBundle\Processor\MultipartUploadProcessor;
 use Symfony\Component\HttpFoundation\HeaderBag;
 
 class MultipartUploadProcessorTest extends AbstractProcessorTestCase
@@ -91,7 +91,7 @@ class MultipartUploadProcessorTest extends AbstractProcessorTestCase
             ->will($this->returnValue($content));
 
         $request->headers = new HeaderBag(array(
-            'Content-Type' => 'multipart/related; boundary="'.$boundary.'"'
+            'Content-Type' => 'multipart/related; boundary="'.$boundary.'"',
         ));
 
         return $request;

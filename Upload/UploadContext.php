@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Upload;
 
 use Symfony\Component\Form\FormInterface;
@@ -38,7 +39,7 @@ class UploadContext
      * @param \Symfony\Component\Form\FormInterface     $form
      * @param array                                     $config
      */
-    public function __construct (Request $request = null, FormInterface $form = null, array $config = array())
+    public function __construct(Request $request = null, FormInterface $form = null, array $config = array())
     {
         $this->request = $request;
         $this->form = $form;

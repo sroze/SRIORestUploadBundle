@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Storage;
 
 class UploadedFile
@@ -14,7 +15,7 @@ class UploadedFile
     protected $file;
 
     /**
-     * @param FileStorage $storage
+     * @param FileStorage          $storage
      * @param FileAdapterInterface $file
      */
     public function __construct(FileStorage $storage, FileAdapterInterface $file)

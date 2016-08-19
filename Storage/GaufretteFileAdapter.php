@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Storage;
 
 use Gaufrette\File;
@@ -16,7 +17,7 @@ class GaufretteFileAdapter implements FileAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function exists()
     {
@@ -24,7 +25,7 @@ class GaufretteFileAdapter implements FileAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getSize()
     {
@@ -32,7 +33,7 @@ class GaufretteFileAdapter implements FileAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -40,7 +41,7 @@ class GaufretteFileAdapter implements FileAdapterInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFile()
     {

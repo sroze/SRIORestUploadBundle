@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Request;
 
 interface RequestContentHandlerInterface
@@ -13,7 +14,7 @@ interface RequestContentHandlerInterface
     /**
      * Is the end of file.
      *
-     * @return boolean
+     * @return bool
      */
     public function eof();
 

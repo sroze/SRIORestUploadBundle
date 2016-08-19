@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Fixtures\Entity;
 
 use SRIO\RestUploadBundle\Entity\ResumableUploadSession as BaseResumableUploadSession;

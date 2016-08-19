@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Storage;
 
 use SRIO\RestUploadBundle\Strategy\NamingStrategy;
@@ -32,10 +33,10 @@ class FileStorage
     /**
      * Constructor.
      *
-     * @param                                 $name
-     * @param FilesystemAdapterInterface      $filesystem
-     * @param StorageStrategy                 $storageStrategy
-     * @param NamingStrategy                  $namingStrategy
+     * @param                            $name
+     * @param FilesystemAdapterInterface $filesystem
+     * @param StorageStrategy            $storageStrategy
+     * @param NamingStrategy             $namingStrategy
      */
     public function __construct($name, FilesystemAdapterInterface $filesystem, StorageStrategy $storageStrategy, NamingStrategy $namingStrategy)
     {
@@ -48,10 +49,10 @@ class FileStorage
     /**
      * Store a file's content.
      *
-     * @param  UploadContext $context
-     * @param  string        $content
-     * @param  array         $config
-     * @param  bool          $overwrite
+     * @param UploadContext $context
+     * @param string        $content
+     * @param array         $config
+     * @param bool          $overwrite
      * 
      * @return UploadedFile
      */
@@ -59,7 +60,7 @@ class FileStorage
     {
         $path = $this->getFilePathFromContext($context);
         if ($overwrite === true) {
-            $this->filesystem->put($path, $content, $config);    
+            $this->filesystem->put($path, $content, $config);
         } else {
             $this->filesystem->write($path, $content, $config);
         }
@@ -71,10 +72,10 @@ class FileStorage
     /**
      * Store a file's content.
      *
-     * @param  UploadContext $context
-     * @param  resource      $resource
-     * @param  array         $config
-     * @param  bool          $overwrite
+     * @param UploadContext $context
+     * @param resource      $resource
+     * @param array         $config
+     * @param bool          $overwrite
      * 
      * @return UploadedFile
      */
@@ -82,7 +83,7 @@ class FileStorage
     {
         $path = $this->getFilePathFromContext($context);
         if ($overwrite === true) {
-            $this->filesystem->putStream($path, $resource, $config);    
+            $this->filesystem->putStream($path, $resource, $config);
         } else {
             $this->filesystem->writeStream($path, $resource, $config);
         }
@@ -92,24 +93,25 @@ class FileStorage
     }
 
     /**
-     * Get or creates a file path from UploadContext
+     * Get or creates a file path from UploadContext.
      *
-     * @param  UploadContext $context
+     * @param UploadContext $context
+     *
      * @return string
      */
     protected function getFilePathFromContext(UploadContext $context)
     {
-        if($context->getFile() != null) {
+        if ($context->getFile() != null) {
             return $context->getFile()->getFile()->getName();
         }
-        
+
         $name = $this->namingStrategy->getName($context);
         $directory = $this->storageStrategy->getDirectory($context, $name);
         $path = $directory.'/'.$name;
-        
+
         return $path;
     }
-    
+
     /**
      * @return FilesystemAdapterInterface
      */

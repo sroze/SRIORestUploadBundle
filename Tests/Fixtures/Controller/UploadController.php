@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Fixtures\Controller;
 
 use SRIO\RestUploadBundle\Tests\Fixtures\Entity\Media;
@@ -6,7 +7,6 @@ use SRIO\RestUploadBundle\Tests\Fixtures\Form\Type\MediaFormType;
 use SRIO\RestUploadBundle\Upload\UploadHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +20,11 @@ class UploadController extends Controller
      * @Route("/upload")
      * @Method({"POST", "PUT"})
      *
-     * @param  \Symfony\Component\HttpFoundation\Request                          $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException
+     *
      * @return JsonResponse
      */
     public function uploadAction(Request $request)

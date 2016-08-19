@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Storage;
 
 interface FileAdapterInterface
@@ -16,7 +17,7 @@ interface FileAdapterInterface
      * @return bool
      */
     public function exists();
-    
+
     /**
      * Retrieve the file path.
      *

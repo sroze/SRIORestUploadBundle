@@ -1,10 +1,10 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Processor;
 
 use SRIO\RestUploadBundle\Storage\FileStorage;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Upload\UploadResult;
 
@@ -14,21 +14,23 @@ class FormDataUploadProcessor extends SimpleUploadProcessor
     const KEY_FIELD_FORM = 'key_form';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handleUpload(Request $request, FormInterface $form = null, array $config = array())
     {
         $config = array_merge(array(
             self::KEY_FIELD_FILE => 'file',
-            self::KEY_FIELD_FORM => 'form'
+            self::KEY_FIELD_FORM => 'form',
         ), $config);
 
         return parent::handleUpload($request, $form, $config);
     }
 
     /**
-     * @param  Request                                                     $request
+     * @param Request $request
+     *
      * @return \SRIO\RestUploadBundle\Upload\UploadResult
+     *
      * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
      */
     public function handleRequest(Request $request)
@@ -77,8 +79,8 @@ class FormDataUploadProcessor extends SimpleUploadProcessor
         $contents = file_get_contents($uploadedFile->getPathname());
         $file = $this->storageHandler->store($response, $contents, array(
             'metadata' => array(
-                FileStorage::METADATA_CONTENT_TYPE => $uploadedFile->getMimeType()
-            )
+                FileStorage::METADATA_CONTENT_TYPE => $uploadedFile->getMimeType(),
+            ),
         ));
 
         $response->setFile($file);
