@@ -1,5 +1,7 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Voter;
+
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Storage\FileStorage;
 use SRIO\RestUploadBundle\Upload\UploadContext;
@@ -8,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This storage voter has the role to chose the storage
  * that will be used for the current file upload.
- *
  */
 class StorageVoter
 {
@@ -35,7 +36,8 @@ class StorageVoter
     /**
      * Add a storage.
      *
-     * @param  FileStorage       $storage
+     * @param FileStorage $storage
+     *
      * @throws \RuntimeException
      */
     public function addStorage(FileStorage $storage)
@@ -53,9 +55,11 @@ class StorageVoter
     /**
      * Get the best storage based on request and/or parameters.
      *
-     * @param  UploadContext                                    $context
+     * @param UploadContext $context
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
      * @throws \RuntimeException
+     *
      * @return FileStorage
      */
     public function getStorage(UploadContext $context)

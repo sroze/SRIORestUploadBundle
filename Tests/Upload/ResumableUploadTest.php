@@ -1,8 +1,8 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Component\HttpFoundation\Response;
 
 class ResumableUploadTest extends AbstractUploadTestCase
 {
@@ -15,7 +15,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
         $content = $this->getResource($client, 'apple.gif');
         $client->request('PUT', $location, array(), array(), array(
             'CONTENT_TYPE' => 'image/gif',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
 
         $this->assertSuccessful($client, $content);
@@ -36,7 +36,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
             $client->request('PUT', $location, array(), array(), array(
                 'CONTENT_TYPE' => 'image/gif',
                 'CONTENT_LENGTH' => strlen($part),
-                'HTTP_Content-Range' => 'bytes '.$start.'-'.$end.'/'.strlen($content)
+                'HTTP_Content-Range' => 'bytes '.$start.'-'.$end.'/'.strlen($content),
             ), $part);
 
             $response = $client->getResponse();
@@ -46,7 +46,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
 
                 $client->request('PUT', $location, array(), array(), array(
                     'CONTENT_LENGTH' => 0,
-                    'HTTP_Content-Range' => 'bytes */'.strlen($content)
+                    'HTTP_Content-Range' => 'bytes */'.strlen($content),
                 ));
 
                 $response = $client->getResponse();
@@ -60,7 +60,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
 
     protected function startSession()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $content = $this->getResource($client, 'apple.gif');
         $parameters = array('name' => 'test');
         $json = json_encode($parameters);
@@ -69,7 +69,7 @@ class ResumableUploadTest extends AbstractUploadTestCase
             'CONTENT_TYPE' => 'application/json',
             'CONTENT_LENGTH' => strlen($json),
             'HTTP_X-Upload-Content-Type' => 'image/gif',
-            'HTTP_X-Upload-Content-Length' => strlen($content)
+            'HTTP_X-Upload-Content-Length' => strlen($content),
         ), $json);
 
         $response = $client->getResponse();

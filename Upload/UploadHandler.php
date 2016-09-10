@@ -1,10 +1,10 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Upload;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Processor\ProcessorInterface;
-
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ class UploadHandler
     /**
      * Constructor.
      *
-     * @var string $uploadTypeParameter
+     * @var string
      */
     public function __construct($uploadTypeParameter)
     {
@@ -59,9 +59,10 @@ class UploadHandler
      * @param array                                 $config
      *
      * @throws \SRIO\RestUploadBundle\Exception\UploadException
+     *
      * @return UploadResult
      */
-    public function handleRequest (Request $request, FormInterface $form = null, array $config = array())
+    public function handleRequest(Request $request, FormInterface $form = null, array $config = array())
     {
         try {
             $processor = $this->getProcessor($request, $config);
@@ -87,6 +88,7 @@ class UploadHandler
      * @param array                                     $config
      *
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     *
      * @return ProcessorInterface
      */
     protected function getProcessor(Request $request, array $config)
@@ -107,6 +109,7 @@ class UploadHandler
      * Get the current upload type parameter.
      *
      * @param array $extraConfiguration
+     *
      * @internal param $parameter
      * @internal param $config
      *

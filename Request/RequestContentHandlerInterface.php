@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Request;
 
 interface RequestContentHandlerInterface
@@ -8,14 +9,14 @@ interface RequestContentHandlerInterface
      *
      * @return string
      */
-    public function gets ();
+    public function gets();
 
     /**
      * Is the end of file.
      *
-     * @return boolean
+     * @return bool
      */
-    public function eof ();
+    public function eof();
 
     /**
      * Get cursor position.

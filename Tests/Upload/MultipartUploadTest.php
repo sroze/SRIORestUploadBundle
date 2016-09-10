@@ -1,11 +1,12 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
 class MultipartUploadTest extends AbstractUploadTestCase
 {
     public function testWithoutContent()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('name' => 'test');
 
         $boundary = uniqid();
@@ -14,14 +15,14 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
             'CONTENT_TYPE' => 'multipart/related; boundary="'.$boundary.'"',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
         $this->assertResponseHasErrors($client);
     }
 
     public function testWithoutHeaders()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('name' => 'test');
 
         $boundary = uniqid();
@@ -36,7 +37,7 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
     public function testWithoutBoundary()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('name' => 'test');
 
         $boundary = uniqid();
@@ -47,14 +48,14 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
             'CONTENT_TYPE' => 'multipart/related',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
         $this->assertResponseHasErrors($client);
     }
 
     public function testBinaryBeforeMeta()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('name' => 'test');
 
         $boundary = uniqid();
@@ -65,14 +66,14 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
             'CONTENT_TYPE' => 'multipart/related; boundary="'.$boundary.'"',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
         $this->assertResponseHasErrors($client);
     }
 
     public function testMultipartUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('name' => 'test');
 
         $boundary = uniqid();
@@ -83,7 +84,7 @@ class MultipartUploadTest extends AbstractUploadTestCase
 
         $client->request('POST', '/upload?uploadType=multipart', array(), array(), array(
             'CONTENT_TYPE' => 'multipart/related; boundary="'.$boundary.'"',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
 
         $response = $client->getResponse();

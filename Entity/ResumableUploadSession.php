@@ -1,10 +1,10 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Entity;
 
 /**
  * This model represent a resumable upload session. It is used to store
  * a session ID and the related file path.
- *
  */
 class ResumableUploadSession
 {
@@ -46,7 +46,7 @@ class ResumableUploadSession
     /**
      * Content length.
      *
-     * @var integer
+     * @var int
      */
     protected $contentLength;
 

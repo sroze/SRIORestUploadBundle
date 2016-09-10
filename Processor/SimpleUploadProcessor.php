@@ -1,18 +1,21 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Processor;
 
 use SRIO\RestUploadBundle\Exception\UploadException;
 use SRIO\RestUploadBundle\Storage\FileStorage;
 use Symfony\Component\HttpFoundation\Request;
-
 use SRIO\RestUploadBundle\Upload\UploadResult;
 
 class SimpleUploadProcessor extends AbstractUploadProcessor
 {
     /**
-     * @param  \Symfony\Component\HttpFoundation\Request                   $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
-     * @param  Request                                                     $request
+     *
+     * @param Request $request
+     *
      * @return UploadResult
      */
     public function handleRequest(Request $request)
@@ -40,7 +43,9 @@ class SimpleUploadProcessor extends AbstractUploadProcessor
             }
 
             $file = $this->storageHandler->store($result, $content, array(
-                FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('Content-Type')
+                'metadata' => array(
+                    FileStorage::METADATA_CONTENT_TYPE => $request->headers->get('Content-Type'),
+                ),
             ));
 
             $result->setFile($file);

@@ -1,4 +1,5 @@
 <?php
+
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -14,6 +15,8 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
 
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
+            new Oneup\FlysystemBundle\OneupFlysystemBundle(),
+
             new SRIO\RestUploadBundle\SRIORestUploadBundle(),
         );
     }

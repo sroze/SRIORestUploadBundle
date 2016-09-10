@@ -1,9 +1,9 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Fixtures\Entity;
 
 use SRIO\RestUploadBundle\Model\UploadableFileInterface;
 use SRIO\RestUploadBundle\Storage\UploadedFile;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,37 +21,41 @@ class Media implements UploadableFileInterface
 
     /**
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     public $name;
 
     /**
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     public $mimeType;
 
     /**
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     public $path;
 
     /**
      * @ORM\Column(type="integer")
-     * @var integer
+     *
+     * @var int
      */
     public $size;
 
     /**
      * @ORM\Column(type="string")
+     *
      * @var string
      */
     public $originalName;
 
     /**
      * Set uploaded file.
-     *
      */
     public function setFile(UploadedFile $uploaded)
     {
@@ -59,7 +63,7 @@ class Media implements UploadableFileInterface
         $this->size = $uploaded->getFile()->getSize();
 
         // TODO Add mimetype on `UploadedFile`
-        $this->mimeType = $uploaded->getStorage()->getFilesystem()->mimeType($this->path);
+        $this->mimeType = $uploaded->getStorage()->getFilesystem()->getMimeType($this->path);
 
         // TODO Add original name
         $this->originalName = $uploaded->getFile()->getName();

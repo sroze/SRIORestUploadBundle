@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Processor;
 
 use SRIO\RestUploadBundle\Tests\Upload\AbstractUploadTestCase;
@@ -10,7 +11,8 @@ abstract class AbstractProcessorTestCase extends AbstractUploadTestCase
      *
      * @param $object
      * @param $methodName
-     * @param  array $arguments
+     * @param array $arguments
+     *
      * @return mixed
      */
     protected function callMethod($object, $methodName, array $arguments)
@@ -24,6 +26,7 @@ abstract class AbstractProcessorTestCase extends AbstractUploadTestCase
      * Get a protected method as public.
      *
      * @param $name
+     *
      * @return \ReflectionMethod
      */
     protected function getMethod($className, $name)

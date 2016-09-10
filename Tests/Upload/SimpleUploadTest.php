@@ -1,11 +1,12 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Upload;
 
 class SimpleUploadTest extends AbstractUploadTestCase
 {
     public function testWithEmptyContentTypeHeaderSimpleUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('uploadType' => 'simple', 'name' => 'test');
 
         $content = $this->getResource($client, 'apple.gif');
@@ -19,12 +20,12 @@ class SimpleUploadTest extends AbstractUploadTestCase
 
     public function testWithoutFormSimpleUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('uploadType' => 'simple');
         $content = $this->getResource($client, 'apple.gif');
         $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array(
             'CONTENT_TYPE' => 'image/gif',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ));
 
         $response = $client->getResponse();
@@ -33,7 +34,7 @@ class SimpleUploadTest extends AbstractUploadTestCase
 
     public function testWithoutContentSimpleUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('uploadType' => 'simple', 'name' => 'test');
         $client->request('POST', '/upload?'.http_build_query($queryParameters));
 
@@ -43,13 +44,13 @@ class SimpleUploadTest extends AbstractUploadTestCase
 
     public function testSimpleUpload()
     {
-        $client = static::createClient();
+        $client = $this->getNewClient();
         $queryParameters = array('uploadType' => 'simple', 'name' => 'test');
 
         $content = $this->getResource($client, 'apple.gif');
         $client->request('POST', '/upload?'.http_build_query($queryParameters), array(), array(), array(
             'CONTENT_TYPE' => 'image/gif',
-            'CONTENT_LENGTH' => strlen($content)
+            'CONTENT_LENGTH' => strlen($content),
         ), $content);
 
         $response = $client->getResponse();

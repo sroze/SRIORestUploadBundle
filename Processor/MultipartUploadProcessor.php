@@ -1,19 +1,21 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Processor;
 
 use SRIO\RestUploadBundle\Storage\FileStorage;
 use Symfony\Component\HttpFoundation\Request;
-
 use SRIO\RestUploadBundle\Exception\UploadProcessorException;
 use SRIO\RestUploadBundle\Upload\UploadResult;
 
 class MultipartUploadProcessor extends AbstractUploadProcessor
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
-     * @param  Request                                                     $request
+     * @param Request $request
+     *
      * @throws \Exception|\SRIO\RestUploadBundle\Exception\UploadException
+     *
      * @return \SRIO\RestUploadBundle\Upload\UploadResult
      */
     public function handleRequest(Request $request)
@@ -40,7 +42,9 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
             list($contentType, $content) = $this->getContent($request);
 
             $file = $this->storageHandler->store($result, $content, array(
-                FileStorage::METADATA_CONTENT_TYPE => $contentType
+                'metadata' => array(
+                    FileStorage::METADATA_CONTENT_TYPE => $contentType,
+                ),
             ));
 
             $result->setFile($file);
@@ -54,8 +58,10 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      *
      * Note: MUST be called before getContent, and just one time.
      *
-     * @param  Request                                                   $request
+     * @param Request $request
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     *
      * @return array
      */
     protected function getFormData(Request $request)
@@ -84,8 +90,9 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
      *
      * Note: MUST be called after getFormData, and just one time.
      *
-     * @param  \Symfony\Component\HttpFoundation\Request $request
-     * @param  Request                                   $request
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request                                   $request
+     *
      * @return array
      */
     protected function getContent(Request $request)
@@ -96,11 +103,12 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Check multipart headers.
      *
-     * @param  Request                                                   $request
-     * @param  array                                                     $headers
+     * @param Request $request
+     * @param array   $headers
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      */
-    protected function checkHeaders (Request $request, array $headers = array())
+    protected function checkHeaders(Request $request, array $headers = array())
     {
         list($contentType) = $this->parseContentTypeAndBoundary($request);
 
@@ -118,8 +126,10 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Get a part of request.
      *
-     * @param  Request                                                   $request
+     * @param Request $request
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     *
      * @return array
      */
     protected function getPart(Request $request)
@@ -161,9 +171,11 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Get part of a resource.
      *
-     * @param  Request                                                   $request
+     * @param Request $request
      * @param $boundary
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
+     *
      * @return string
      */
     protected function getRequestPart(Request $request, $boundary)
@@ -189,7 +201,7 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
                     continue;
                 }
 
-                $boundaryCount++;
+                ++$boundaryCount;
             } elseif ($line == $delimiter) {
                 break;
             } elseif ($line == $endDelimiter || $line == $endDelimiter."\r\n") {
@@ -205,8 +217,10 @@ class MultipartUploadProcessor extends AbstractUploadProcessor
     /**
      * Parse the content type and boudary from Content-Type header.
      *
-     * @param  Request                                                   $request
+     * @param Request $request
+     *
      * @return array
+     *
      * @throws \SRIO\RestUploadBundle\Exception\UploadProcessorException
      */
     protected function parseContentTypeAndBoundary(Request $request)

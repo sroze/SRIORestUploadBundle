@@ -2,6 +2,6 @@
 
 namespace SRIO\RestUploadBundle\Exception;
 
-class UploadException extends \Exception
+class FileExistsException extends \Exception
 {
 }

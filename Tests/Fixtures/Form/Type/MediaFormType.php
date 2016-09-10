@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\Tests\Fixtures\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -16,7 +17,7 @@ class MediaFormType extends AbstractType
         $builder
             ->add('name', 'text', array(
                 'required' => true,
-                'constraints' => array(new NotBlank())
+                'constraints' => array(new NotBlank()),
             ))
         ;
     }
@@ -27,13 +28,13 @@ class MediaFormType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'csrf_protection'   => false,
-            'data_class' => 'SRIO\RestUploadBundle\Tests\Fixtures\Entity\Media'
+            'csrf_protection' => false,
+            'data_class' => 'SRIO\RestUploadBundle\Tests\Fixtures\Entity\Media',
         ));
     }
 
     public function getName()
     {
-        return null;
+        return;
     }
 }

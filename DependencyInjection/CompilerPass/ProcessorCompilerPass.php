@@ -1,4 +1,5 @@
 <?php
+
 namespace SRIO\RestUploadBundle\DependencyInjection\CompilerPass;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

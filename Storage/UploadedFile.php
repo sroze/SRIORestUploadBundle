@@ -1,7 +1,6 @@
 <?php
-namespace SRIO\RestUploadBundle\Storage;
 
-use Gaufrette\File;
+namespace SRIO\RestUploadBundle\Storage;
 
 class UploadedFile
 {
@@ -11,22 +10,22 @@ class UploadedFile
     protected $storage;
 
     /**
-     * @var \Gaufrette\File
+     * @var FileAdapterInterface
      */
     protected $file;
 
     /**
-     * @param FileStorage $storage
-     * @param File        $file
+     * @param FileStorage          $storage
+     * @param FileAdapterInterface $file
      */
-    public function __construct(FileStorage $storage, File $file)
+    public function __construct(FileStorage $storage, FileAdapterInterface $file)
     {
         $this->storage = $storage;
         $this->file = $file;
     }
 
     /**
-     * @return \Gaufrette\File
+     * @return FileAdapterInterface
      */
     public function getFile()
     {
