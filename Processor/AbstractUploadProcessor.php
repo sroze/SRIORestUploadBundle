@@ -101,7 +101,7 @@ abstract class AbstractUploadProcessor implements ProcessorInterface
     {
         $keys = array();
         foreach ($form->all() as $child) {
-            $keys[$child->getName()] = count($child->all() > 0) ? $this->getFormKeys($child) : null;
+            $keys[$child->getName()] = count($child->all()) > 0 ? $this->getFormKeys($child) : null;
         }
 
         return $keys;
